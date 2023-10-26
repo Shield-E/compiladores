@@ -1,7 +1,18 @@
-import ply
+import ply.lex as lex
 
 # todo: adicionar palavras reservadas
-
+reserved = {
+    'def': 'DEF',
+    'int': 'INT_DECL',
+    'float': 'FLOAT_DECL',
+    'string': 'STRING_DECL',
+    'print': 'PRINT',
+    'read': 'READ',
+    'return': 'RETURN',
+    'if': 'IF',
+    'for': 'FOR',
+    'new': 'NEW'
+}
 # todo: adicionar lista dos nomes dos tokens
 
 # todo: adicionar regras com expressoes regulares para identificação de tokens

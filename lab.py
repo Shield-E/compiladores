@@ -30,7 +30,7 @@ tabela_regras = {
     ('Bl', '0'): ['0'],
     ('Bl', '1'): ['1'],
 }
-t = {
+memoria_regras = {
     'Bl.val': 0,
     'B.val': 0,
     'Bl.lvl': 0,
@@ -64,4 +64,7 @@ while x != '$':
     x = stack[-1]
     print(stack)
 
-
+def executa_regra(rule):
+    for key in memoria_regras:
+        rule = rule.replace(key, f'memoria_regras["{key}"]')
+        exec(rule)

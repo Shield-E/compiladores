@@ -1,5 +1,4 @@
 import ply.lex as lex
-
 # todo: adicionar palavras reservadas
 reserved = {
     'def': 'DEF',

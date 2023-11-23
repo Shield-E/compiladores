@@ -11,14 +11,14 @@ from compila.parser.tokenizer import Token, Tokenizer
 
 class LL1Table(dict):
     def __str__(self):
-        symbols = []
-        tokens = []
+        symbols = set()
+        tokens = set()
 
         for symbol, token in self.keys():
-            symbols.append(symbol)
-            tokens.append(token)
+            symbols.add(symbol)
+            tokens.add(token)
 
-        headers = ["Symbol/Token"] + tokens
+        headers = ["Symbol/Token"] + list(tokens)
         lines = []
         for symbol in symbols:
             line = [symbol]

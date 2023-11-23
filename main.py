@@ -1,14 +1,14 @@
 from compila.test_lang import TestLangParser
+from compila.error import CompilaError
+
 
 parser = TestLangParser()
 
-code = "123 + hello * 2"
+code = "123 + hello ** 2"
 
 try:
     parser.analyze(code)
-except Exception as e:
-    print(e)
-    for i in parser.stacktrace:
-        print(i)
+except CompilaError as error:
+    print(error)
 else:
     print("Tudo ocorreu bem")

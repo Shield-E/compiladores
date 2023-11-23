@@ -87,7 +87,8 @@ class ParserLL1:
 
             if (node, token.name) not in self.table:
                 raise CompilaSyntacticalError(
-                    f'Unexpected token "{token}" found. Verify your input code.'
+                    f'Unexpected token "{token.name}" found.',
+                    'Verify your input code.'
                 )
 
             production = self.table[node, token.name]

@@ -32,11 +32,12 @@ class RegexGrammar(Grammar):
             Production("GROUP", ["\\", "SPECIAL_SYMBOL", op2_group]),
         ]
 
-        for i in ALPHANUMERIC + " ":
+        regex_safe_symbols = " !@#$%¨&/={,.;}'[]\""
+        for i in ALPHANUMERIC + regex_safe_symbols:
             prod = Production("SYMBOL", [i, op_symbol])
             productions.append(prod)
 
-        for i in "+*?\\":
+        for i in "+*?\\|()":
             prod = Production("SPECIAL_SYMBOL", [i, op_symbol])
             productions.append(prod)
 

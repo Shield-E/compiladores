@@ -9,7 +9,7 @@ class CCLangTokenizer(Tokenizer):
     all_expressions = dict(
         identifier = r"[a-zA-Z]([a-zA-Z]|[0-9])*",
         number = r"[0-9]+",
-        add = r"\+",        
+        add = r"\+",
         _ = r" ",
     )
 

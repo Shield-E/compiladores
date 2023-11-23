@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from tabulate import tabulate
 
 
 DEAD_STATE_INDEX = -1
@@ -87,3 +88,29 @@ class FiniteAutomata:
         for origin, symbol, target in transitions:
             transition_map[(origin, symbol)] = target
         return transition_map
+
+    def __str__(self):
+        headers = ["Q/Σ"] + self.alphabet
+        data = []
+
+        for i, state in enumerate(self.states):
+            name = '"' + state.name + '"'
+
+            if state.is_final:
+                name = "* " + name
+
+            if i == self.initial_state_index:
+                name = "→ " + name
+
+            line = [name]
+            for symbol in self.alphabet:
+                index = self.transition_map.get((i, symbol))
+                if index is not None:
+                    target = self.states[index]
+                    state_name = '"' + str(target.name) + '"'  # name in quotes
+                    line.append(state_name)
+                else:
+                    line.append("")
+            data.append(line)
+
+        return tabulate(data, headers=headers, tablefmt="fancy_grid")

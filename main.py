@@ -2,6 +2,8 @@ from compila.cclang import CCLangParser
 
 parser = CCLangParser()
 
+print(parser.table)
+
 code = "123 + 456 + 2"
 
 try:

@@ -1,14 +1,33 @@
 from functools import partial
 from copy import deepcopy
+from tabulate import tabulate
 
 from compila.parser.tokenizer import Tokenizer, Token
 from compila.parser.grammar import Grammar
 from compila.constants import END_MARKER, EPSILON
 from compila.error import CompilaSyntacticalError
 
-class LL1Table(dict):
-    pass
 
+class LL1Table(dict):
+    def __str__(self):
+        symbols = []
+        tokens = []
+
+        for symbol, token in self.keys():
+            symbols.append(symbol)
+            tokens.append(token)
+        
+        headers = ["Symbol/Token"] + tokens
+        lines = []
+        for symbol in symbols:
+            line = [symbol]
+            for token in tokens:
+                key = (symbol, token)
+                val = str(self.get(key, ""))
+                line.append(val)
+            lines.append(line)
+
+        return tabulate(lines, headers=headers, tablefmt="fancy_grid")
 
 class SemanticRule(partial):
     def __repr__(self) -> str:

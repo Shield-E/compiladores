@@ -1,8 +1,14 @@
-from compila.regexp.regex_to_automata import compile
+from compila.cclang import CCLangParser
 
-machine = compile(r"Hello (World)?")
+parser = CCLangParser()
 
-print(machine.evaluate("Hello"))
-print(machine.evaluate("Hello "))
-print(machine.evaluate("Hello World"))
-print(machine.evaluate("Hello Worlds"))
+code = "123 + 456 + 2"
+
+try:
+    parser.analyze(code)
+except Exception as e:
+    print(e)
+    for i in parser.stacktrace:
+        print(i)
+else:
+    print("Tudo ocorreu bem")

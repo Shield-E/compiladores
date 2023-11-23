@@ -17,6 +17,7 @@ class SemanticRule(partial):
 
 class ParserLL1:
     def __init__(self, tokenizer: Tokenizer,  grammar: Grammar):
+        self.stacktrace = list()
         self.set_tokenizer(tokenizer)
         self.set_grammar(grammar)
 
@@ -30,6 +31,7 @@ class ParserLL1:
     def analyze(self, string):
         index = 0
         stack = []
+        self.stacktrace.clear()
 
         start_symbol = deepcopy(self.grammar.start_symbol())
         node = start_symbol
@@ -40,7 +42,8 @@ class ParserLL1:
         stack.append(start_symbol)
 
         while len(stack) > 1:
-            # print(stack)
+            stacksnapshot = str(stack)
+            self.stacktrace.append(stacksnapshot)
 
             token = tokens[index]
             node = stack.pop()
@@ -81,9 +84,11 @@ class ParserLL1:
             # Stacks are FIFO, so we put it in reverse
             stack.extend(reversed(to_stack))
 
-        # print(stack)
+        stacksnapshot = str(stack)
+        self.stacktrace.append(stacksnapshot)
+
         if stack.pop() != END_MARKER:
-            print("Oh no")
+            raise CompilaSyntacticalError("Something went wrong in the parsing.")
         
         return start_symbol
 

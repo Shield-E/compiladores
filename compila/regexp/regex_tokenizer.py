@@ -1,7 +1,7 @@
-from compila.parser.tokenizer import Token, Tokenizer
-from compila.constants import ANY_DIGIT, ANY_LOWER_CASE, ANY_UPPER_CASE
-
 from collections.abc import Generator
+
+from compila.constants import ANY_DIGIT, ANY_LOWER_CASE, ANY_UPPER_CASE
+from compila.parser.tokenizer import Token, Tokenizer
 
 
 class RegexTokenizer(Tokenizer):

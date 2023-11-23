@@ -1,8 +1,8 @@
-from itertools import pairwise
 from collections import defaultdict
+from itertools import pairwise
 
+from compila.constants import END_MARKER, EPSILON
 from compila.parser.production import Production
-from compila.constants import EPSILON, END_MARKER
 
 
 class Grammar:
@@ -38,7 +38,7 @@ class Grammar:
         while modified:
             modified = False
 
-            for production in self.productions:           
+            for production in self.productions:
                 for symbol in production.get_target_symbols():
                     if symbol == EPSILON:
                         modified |= EPSILON not in first[production.origin]
@@ -54,7 +54,7 @@ class Grammar:
                 else:
                     modified |= EPSILON not in first[production.origin]
                     first[production.origin].add(EPSILON)
-        
+
         first.pop(EPSILON, None)
         self.first = dict(first)
 
@@ -78,9 +78,11 @@ class Grammar:
 
                 if target_symbols:
                     last_symbol = target_symbols[-1]
-                    modified |= not follow[production.origin].issubset(follow[last_symbol])
+                    modified |= not follow[production.origin].issubset(
+                        follow[last_symbol]
+                    )
                     follow[last_symbol] |= follow[production.origin]
-                
+
                 if len(target_symbols) >= 2:
                     if EPSILON in self.first[sym_b]:
                         follow[sym_a] |= follow[production.origin]

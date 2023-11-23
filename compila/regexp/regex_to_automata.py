@@ -1,12 +1,11 @@
 from collections import defaultdict, deque
 from itertools import count
 
-from compila.regexp.regex_tree import *
-from compila.regexp.regex_tokenizer import RegexTokenizer
-from compila.regexp.regex_grammar import RegexGrammar
 from compila.automata import FiniteAutomata, State
 from compila.parser.parser_ll1 import ParserLL1
-
+from compila.regexp.regex_grammar import RegexGrammar
+from compila.regexp.regex_tokenizer import RegexTokenizer
+from compila.regexp.regex_tree import *
 
 regex_tokenizer = RegexTokenizer()
 regex_grammar = RegexGrammar()
@@ -17,7 +16,7 @@ def compile(expression: str) -> FiniteAutomata:
     """
     Converts a regular expression into equivalent Finite Automata.
     """
-    
+
     node = regex_parser.analyze(expression)
     tree = node.syn_tree
 
@@ -49,6 +48,7 @@ def _calculate_followpos(tree: RegexNode) -> defaultdict[int, set]:
     _recursive_followpos(tree, followpos)
     return dict(followpos)
 
+
 def _recursive_followpos(tree: RegexNode, followpos: defaultdict[int, set]):
     if tree is None:
         return
@@ -74,10 +74,12 @@ def _recursive_followpos(tree: RegexNode, followpos: defaultdict[int, set]):
         _recursive_followpos(left_node, followpos)
         _recursive_followpos(right_node, followpos)
 
+
 def _anotate_tree(tree: RegexNode) -> RegexNode:
     tree = ConcatNode(tree, EndMarkerNode())
     _recursive_anotate_tree(tree, 0)
     return tree
+
 
 def _recursive_anotate_tree(tree: RegexNode, tag: int) -> int:
     """
@@ -104,7 +106,7 @@ def _recursive_anotate_tree(tree: RegexNode, tag: int) -> int:
     if isinstance(tree, ConcatNode):
         for node in tree.children:
             tag = _recursive_anotate_tree(node, tag)
-        
+
         left_node = tree.children[0]
         right_node = tree.children[1]
 
@@ -128,11 +130,16 @@ def _recursive_anotate_tree(tree: RegexNode, tag: int) -> int:
         tree.lastpos = tree.children[0].lastpos
         return tag
 
-def _get_automata_parameters(*, first_tagset, final_leaf_tag, alphabet, followpos, symbol_tags):
+
+def _get_automata_parameters(
+    *, first_tagset, final_leaf_tag, alphabet, followpos, symbol_tags
+):
     states = []
     transitions = []
 
-    tagset_to_index = defaultdict(count().__next__)  # gives a new index for new elements
+    tagset_to_index = defaultdict(
+        count().__next__
+    )  # gives a new index for new elements
     tagset_queue = deque()
     tagset_queue.appendleft(first_tagset)
 
@@ -165,5 +172,3 @@ def get_leafs(tree):
     for node in tree.children:
         leafs.extend(get_leafs(node))
     return leafs
-
-

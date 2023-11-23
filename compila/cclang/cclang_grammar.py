@@ -1,6 +1,6 @@
+from compila.constants import EPSILON
 from compila.parser.grammar import Grammar
 from compila.parser.production import Production
-from compila.constants import EPSILON
 
 
 class CCLangGrammar(Grammar):

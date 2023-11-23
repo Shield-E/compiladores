@@ -1,5 +1,4 @@
-from compila.symbols import EpsilonSymbol, EndMarkerSymbol
-
+from compila.symbols import EndMarkerSymbol, EpsilonSymbol
 
 DIGITS = "0123456789"
 LOWER_CASE = "abcdefghijklmnopqrstuvxwyz"

@@ -1,11 +1,12 @@
-from functools import partial
 from copy import deepcopy
+from functools import partial
+
 from tabulate import tabulate
 
-from compila.parser.tokenizer import Tokenizer, Token
-from compila.parser.grammar import Grammar
 from compila.constants import END_MARKER, EPSILON
 from compila.error import CompilaSyntacticalError
+from compila.parser.grammar import Grammar
+from compila.parser.tokenizer import Token, Tokenizer
 
 
 class LL1Table(dict):
@@ -16,7 +17,7 @@ class LL1Table(dict):
         for symbol, token in self.keys():
             symbols.append(symbol)
             tokens.append(token)
-        
+
         headers = ["Symbol/Token"] + tokens
         lines = []
         for symbol in symbols:
@@ -29,13 +30,14 @@ class LL1Table(dict):
 
         return tabulate(lines, headers=headers, tablefmt="fancy_grid")
 
+
 class SemanticRule(partial):
     def __repr__(self) -> str:
         return "SemanticRule"
 
 
 class ParserLL1:
-    def __init__(self, tokenizer: Tokenizer,  grammar: Grammar):
+    def __init__(self, tokenizer: Tokenizer, grammar: Grammar):
         self.stacktrace = list()
         self.set_tokenizer(tokenizer)
         self.set_grammar(grammar)
@@ -46,7 +48,7 @@ class ParserLL1:
     def set_grammar(self, grammar: Grammar):
         self.grammar = grammar
         self.create_table()
-    
+
     def analyze(self, string):
         index = 0
         stack = []
@@ -74,15 +76,19 @@ class ParserLL1:
                 node()
                 continue
 
-            if (node == token.name):
+            if node == token.name:
                 index += 1
                 continue
 
             if node in self.grammar.terminal:
-                raise CompilaSyntacticalError(f'Unexpected node "{node}" found on stack. You may have some error in your grammar')
+                raise CompilaSyntacticalError(
+                    f'Unexpected node "{node}" found on stack. You may have some error in your grammar'
+                )
 
             if (node, token.name) not in self.table:
-                raise CompilaSyntacticalError(f'Unexpected token "{token}" found. Verify your input code.')
+                raise CompilaSyntacticalError(
+                    f'Unexpected token "{token}" found. Verify your input code.'
+                )
 
             production = self.table[node, token.name]
             # deepcoping here creates different objects for
@@ -99,7 +105,7 @@ class ParserLL1:
                         *avaliable_params,
                     )
                     to_stack[i] = rule
-            
+
             # Stacks are FIFO, so we put it in reverse
             stack.extend(reversed(to_stack))
 
@@ -108,7 +114,7 @@ class ParserLL1:
 
         if stack.pop() != END_MARKER:
             raise CompilaSyntacticalError("Something went wrong in the parsing.")
-        
+
         return start_symbol
 
     def create_table(self):

@@ -1,4 +1,4 @@
-from compila.symbols import GrammarSymbol, EpsilonSymbol, EndMarkerSymbol
+from compila.symbols import EndMarkerSymbol, EpsilonSymbol, GrammarSymbol
 
 
 class Production:
@@ -10,8 +10,11 @@ class Production:
         return [i for i in self.target if not callable(i)]
 
     def get_non_empty_symbols(self):
-        return [i for i in self.get_target_symbols() 
-                if not isinstance(i, (EpsilonSymbol, EndMarkerSymbol))]
+        return [
+            i
+            for i in self.get_target_symbols()
+            if not isinstance(i, (EpsilonSymbol, EndMarkerSymbol))
+        ]
 
     def _fix_target_types(self, target):
         new_target = []

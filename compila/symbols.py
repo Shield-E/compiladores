@@ -18,7 +18,7 @@ class EpsilonSymbol(str):
 
     def __hash__(self) -> int:
         return hash("EpsilonSymbol($)")
-    
+
     def __eq__(self, __value: object) -> bool:
         return type(__value) == type(self)
 

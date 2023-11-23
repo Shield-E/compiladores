@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from tabulate import tabulate
 
+from tabulate import tabulate
 
 DEAD_STATE_INDEX = -1
 
@@ -14,17 +14,17 @@ class State:
 
 class FiniteAutomata:
     def __init__(
-            self, 
-            states: list, 
-            transitions: list[int, str, int], 
-            alphabet: str, 
-            initial_state_index: int = 0
-        ):
+        self,
+        states: list,
+        transitions: list[int, str, int],
+        alphabet: str,
+        initial_state_index: int = 0,
+    ):
         self.states = states
         self.initial_state_index = initial_state_index
         self.alphabet = alphabet
         self.transition_map = self._create_transition_map(transitions)
-    
+
     def iterate(self, string: str):
         """
         Iterates over a string yielding the current state of the automata.
@@ -41,7 +41,7 @@ class FiniteAutomata:
             yield current_state_index
             if current_state_index is DEAD_STATE_INDEX:
                 break
-    
+
     def evaluate(self, string: str):
         """
         Checks if the string bellows to the automata language.

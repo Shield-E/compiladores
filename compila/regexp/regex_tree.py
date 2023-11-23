@@ -12,6 +12,7 @@ class RegexNode:
         """
         Returns a string that represents the tree graphically.
         """
+
         def representation(node):
             if isinstance(node, UnionNode):
                 return "or"

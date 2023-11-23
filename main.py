@@ -1,10 +1,8 @@
-from compila.cclang import CCLangParser
+from compila.test_lang import TestLangParser
 
-parser = CCLangParser()
+parser = TestLangParser()
 
-print(parser.table)
-
-code = "123 + 456 + 2"
+code = "123 + hello * 2"
 
 try:
     parser.analyze(code)

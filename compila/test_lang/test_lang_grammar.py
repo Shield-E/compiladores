@@ -10,10 +10,19 @@ class TestLangGrammar(Grammar):
 
     def create_productions(self):
         productions = [
-            Production("E", ["T", "E1"]),
-            Production("E1", ["add", "T", "E1"]),
-            Production("E1", [EPSILON]),
-            Production("T", ["number"]),
+            Production("E", ["T", "E'"]),
+            Production("E'", ["add", "T", "E'"]),
+            Production("E'", ["sub", "T", "E'"]),
+            Production("E'", [EPSILON]),
+
+            Production("T", ["F", "T'"]),
+            Production("T'", ["mul", "F", "T'"]),
+            Production("T'", ["div", "F", "T'"]),
+            Production("T'", [EPSILON]),
+
+            Production("F", ["identifier"]),
+            Production("F", ["number"]),
+            Production("F", ["(", "E", ")"]),
         ]
 
         return productions

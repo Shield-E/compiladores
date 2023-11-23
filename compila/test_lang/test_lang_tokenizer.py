@@ -10,6 +10,9 @@ class TestLangTokenizer(Tokenizer):
         identifier=r"[a-zA-Z]([a-zA-Z]|[0-9])*",
         number=r"[0-9]+",
         add=r"\+",
+        sub=r"-",
+        mul=r"\*",
+        div=r"/",
         _=r" ",
     )
 

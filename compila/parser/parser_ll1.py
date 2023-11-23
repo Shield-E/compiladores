@@ -4,7 +4,7 @@ from copy import deepcopy
 from compila.parser.tokenizer import Tokenizer, Token
 from compila.parser.grammar import Grammar
 from compila.constants import END_MARKER, EPSILON
-
+from compila.error import CompilaSyntacticalError
 
 class LL1Table(dict):
     pass
@@ -57,10 +57,10 @@ class ParserLL1:
                 continue
 
             if node in self.grammar.terminal:
-                raise ValueError(f'Unexpected node "{node}" found on stack. You may have some error in your grammar')
+                raise CompilaSyntacticalError(f'Unexpected node "{node}" found on stack. You may have some error in your grammar')
 
             if (node, token.name) not in self.table:
-                raise SyntaxError(f'Unexpected token "{token}" found. Verify your input code.')
+                raise CompilaSyntacticalError(f'Unexpected token "{token}" found. Verify your input code.')
 
             production = self.table[node, token.name]
             # deepcoping here creates different objects for

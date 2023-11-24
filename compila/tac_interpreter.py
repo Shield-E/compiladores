@@ -71,6 +71,8 @@ class TACInterpreter:
             self.memory[a] = self._val(b) * self._val(c)
         elif op == "/":
             self.memory[a] = self._val(b) // self._val(c)
+        else:
+            raise ValueError(f"Invalid operand {op}")
 
     def _run_conditional_jump(self, instruction: list[str]):
         '''

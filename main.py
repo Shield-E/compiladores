@@ -4,20 +4,12 @@ from compila.tac_interpreter import TACInterpreter
 
 parser = TestLangParser()
 
-origin_code = "a + 1"
+origin_code = "if (2) {5 + 5 - 2}"
+# origin_code = "2 + 3 * 5"
 
 bla = parser.analyze(origin_code)
-
-tac_code = (
-    "a = 0\n" 
-    +
-    bla.syn_code 
-    +
-    "a = t2\n"
-    "print a\n"
-    "if a < 5 goto L1:\n"
-)
-print(tac_code)
+inter_code = bla.syn_code + "print t0"
+print(inter_code)
 
 interpreter = TACInterpreter()
-interpreter.run(tac_code)
+interpreter.run(inter_code)

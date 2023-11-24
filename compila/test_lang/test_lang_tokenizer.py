@@ -13,6 +13,8 @@ class TestLangTokenizer(Tokenizer):
         sub=r"-",
         mul=r"\*",
         div=r"/",
+        open_parentheses=r"\(",
+        close_parentheses=r"\)",
         _=r" ",
     )
 

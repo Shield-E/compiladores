@@ -24,12 +24,13 @@ class TestLangGrammar(Grammar):
 
             Production("F", ["identifier", op_code_3]),
             Production("F", ["number", op_code_7]),
+            Production("F", ["open_parentheses", op_code_10, "E", op_code_11, "close_parentheses"])
         ]
 
         return productions
 
 def op_code_0(s, e):
-    e.her_var = 0
+    e.her_var = -1
     e.her_code = ""
 
 def op_code_1(s, e):
@@ -45,16 +46,16 @@ def op_code_3(t, identifier):
     t.syn_code = t.her_code + code
 
 def op_code_4(e, t, e_dash):
-    e_dash.her_code = t.syn_code
     e_dash.her_var = t.syn_var
+    e_dash.her_code = t.syn_code
 
 def op_code_5(e, t, e_dash):
-    e.syn_code = e_dash.syn_code
     e.syn_var = e_dash.syn_var
+    e.syn_code = e_dash.syn_code
 
 def op_code_6(e_dash_0, _, t, e_dash_1):
-    t.her_code = e_dash_0.her_code
     t.her_var = e_dash_0.her_var
+    t.her_code = e_dash_0.her_code
 
 def op_code_7(t, number):
     t.syn_var = t.her_var + 1
@@ -62,13 +63,20 @@ def op_code_7(t, number):
     t.syn_code = t.her_code + code
 
 def op_code_8(e_dash_0, _, t, e_dash_1):
-    e_dash_0.syn_code = e_dash_1.syn_code
     e_dash_0.syn_var = e_dash_1.syn_var
+    e_dash_0.syn_code = e_dash_1.syn_code
 
 def op_code_9(e_dash, _):
-    e_dash.syn_code = e_dash.her_code
     e_dash.syn_var = e_dash.her_var
+    e_dash.syn_code = e_dash.her_code
 
+def op_code_10(f, _0, e, _1):
+    e.her_var = f.her_var
+    e.her_code = f.her_code
+
+def op_code_11(f, _0, e, _1):
+    f.syn_var = e.syn_var
+    f.syn_code = e.syn_code
 
 # 
 def op_code_sum(e_dash_0, _, t, e_dash_1):

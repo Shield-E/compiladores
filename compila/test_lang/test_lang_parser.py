@@ -11,3 +11,4 @@ class TestLangParser(ParserLL1):
         tokenizer = TestLangTokenizer()
         grammar = TestLangGrammar()
         super().__init__(tokenizer, grammar)
+

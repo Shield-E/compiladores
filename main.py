@@ -1,14 +1,9 @@
 from compila.test_lang import TestLangParser
 from compila.error import CompilaError
 
-
 parser = TestLangParser()
 
-code = "123 + hello ** 2"
+code = "a + b + c"
+bla = parser.analyze(code)
 
-try:
-    parser.analyze(code)
-except CompilaError as error:
-    print(error)
-else:
-    print("Tudo ocorreu bem")
+print(bla.syn_code)

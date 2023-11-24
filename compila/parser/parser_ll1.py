@@ -39,6 +39,7 @@ class SemanticRule(partial):
 class ParserLL1:
     def __init__(self, tokenizer: Tokenizer, grammar: Grammar):
         self.stacktrace = list()
+        self.semantic_on = True
         self.set_tokenizer(tokenizer)
         self.set_grammar(grammar)
 
@@ -73,10 +74,12 @@ class ParserLL1:
                 continue
 
             if isinstance(node, SemanticRule):
-                node()
+                if self.semantic_on:
+                    node()
                 continue
 
             if node == token.name:
+                node.token = token
                 index += 1
                 continue
 

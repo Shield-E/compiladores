@@ -1,20 +1,48 @@
 class TACInterpreter:
-    def run(self, string: str):
+    def run(self, tac_code: str):
         from collections import defaultdict
-        memory = defaultdict(int)
-        for line in string.splitlines():
-            self._decode_instruction(line.split(), memory)
-        print(memory)
+        self.memory = defaultdict(int)
+        self._search_labels(tac_code)
+        self._execution_loop(tac_code)
+        return self.memory
     
-    def _decode_instruction(self, instruction, memory):
-        if len(instruction) == 3:  # a = b
-            self._decode_assign(instruction, memory)
+    def _search_labels(self, tac_code: str):
+        for i, line in enumerate(tac_code.splitlines()):
+            instruction = line.split()
+            if self._is_label(instruction):
+                self.memory[instruction[0]] = i
+
+    def _execution_loop(self, tac_code: str):
+        self.memory["ip"] = ip = 0
+        lines = tac_code.splitlines()
+        while self.memory["ip"] < len(lines):
+            instruction = lines[self.memory["ip"]].split()
+            self.memory["ip"] += 1
+            self._run_instruction(instruction)
+
+    def _run_instruction(self, instruction: list[str]):
+        if len(instruction) == 2:  # print a
+            self._run_command(instruction)
+        elif len(instruction) == 3:  # a = b
+            self._run_assign(instruction)
         elif len(instruction) == 5:  # a = b + c
-            self._decode_op(instruction, memory) 
-        else:
-            pass
+            self._run_op(instruction)
+        elif len(instruction) == 6:
+            self._run_conditional_jump(instruction)
     
-    def _decode_assign(self, instruction: list[str], memory: dict):
+    def _run_command(self, instruction: list[str]):
+        '''
+        command a
+        '''
+        command, a = instruction
+
+        if command == "print":
+            print(self._val(a))
+        if command == "goto":
+            self.memory["ip"] = self.memory[a]
+
+
+    def _run_assign(self, instruction: list[str]):
         '''
         a = b
         '''
@@ -22,11 +50,11 @@ class TACInterpreter:
         b = instruction[2]
 
         if b.isnumeric():
-            memory[a] = int(b)
+            self.memory[a] = int(b)
         else:
-            memory[a] = memory[b]
+            self.memory[a] = self.memory[b]
 
-    def _decode_op(self, instruction: list[str], memory: dict):
+    def _run_op(self, instruction: list[str]):
         '''
         a = b op c
         '''
@@ -36,12 +64,44 @@ class TACInterpreter:
         c = instruction[4]
 
         if op == "+":
-            memory[a] = memory[b] + memory[c]
+            self.memory[a] = self._val(b) + self._val(c)
         elif op == "-":
-            memory[a] = memory[b] - memory[c]
+            self.memory[a] = self._val(b) - self._val(c)
         elif op == "*":
-            memory[a] = memory[b] * memory[c]
+            self.memory[a] = self._val(b) * self._val(c)
         elif op == "/":
-            memory[a] = memory[b] // memory[c]
+            self.memory[a] = self._val(b) // self._val(c)
+
+    def _run_conditional_jump(self, instruction: list[str]):
+        '''
+        if a cmp b goto label
+        '''
+        a = instruction[1]
+        cmp = instruction[2]
+        b = instruction[3]
+        label = instruction[5]
+        
+        if cmp == "==":
+            condition = self._val(a) == self._val(b)
+        elif cmp == "!=":
+            condition = self._val(a) != self._val(b)
+        elif cmp == ">":
+            condition = self._val(a) > self._val(b)
+        elif cmp == "<":
+            condition = self._val(a) < self._val(b)
+        elif cmp == ">=":
+            condition = self._val(a) >= self._val(b)
+        elif cmp == "<=":
+            condition = self._val(a) <= self._val(b)
+
+        if condition:
+            self.memory["ip"] = self.memory[label]
+        
+    def _val(self, data: str):
+        if data.isnumeric():
+            return int(data)
         else:
-            pass
+            return self.memory[data]
+
+    def _is_label(self, instruction: list[str]) -> bool:
+        return len(instruction) == 1  # i guess it will be more complex

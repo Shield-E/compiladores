@@ -34,7 +34,7 @@ def op_code_0(s, e):
     e.her_code = ""
 
 def op_code_1(s, e):
-    s.syn_code = e.syn_code
+    s.syn_code = "L1:\n" + e.syn_code
 
 def op_code_2(e, t, e_dash):
     t.her_var = e.her_var

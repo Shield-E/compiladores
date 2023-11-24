@@ -11,10 +11,16 @@ class TestLangGrammar(Grammar):
     def create_productions(self):
         productions = [
             Production("S", [op_code_0, "E", op_code_1]),
+
             Production("E", [op_code_2, "T", op_code_4, "E1", op_code_5]),
             Production("E1", ["add", op_code_6, "T", op_code_7, "E1", op_code_8]),
             Production("E1", [EPSILON, op_code_9]),
-            Production("T", ["identifier", op_code_3]),
+
+            Production("T", [op_code_2, "F", op_code_4, "T1", op_code_5]),
+            Production("T1", ["mul", op_code_6, "F", op_code_10, "T1", op_code_8]),
+            Production("T1", [EPSILON, op_code_9]),
+
+            Production("F", ["identifier", op_code_3])
         ]
 
         return productions
@@ -59,3 +65,8 @@ def op_code_8(e_dash_0, _, t, e_dash_1):
 def op_code_9(e_dash, _):
     e_dash.syn_code = e_dash.her_code
     e_dash.syn_var = e_dash.her_var
+
+def op_code_10(t_dash_0, _, f, t_dash_1):
+    t_dash_1.her_var = f.syn_var + 1
+    code = f"t{t_dash_1.her_var} = t{t_dash_0.her_var} * t{f.syn_var}\n"
+    t_dash_1.her_code = f.syn_code + code

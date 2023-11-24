@@ -13,14 +13,17 @@ class TestLangGrammar(Grammar):
             Production("S", [op_code_0, "E", op_code_1]),
 
             Production("E", [op_code_2, "T", op_code_4, "E1", op_code_5]),
-            Production("E1", ["add", op_code_6, "T", op_code_7, "E1", op_code_8]),
+            Production("E1", ["add", op_code_6, "T", op_code_sum, "E1", op_code_8]),
+            Production("E1", ["sub", op_code_6, "T", op_code_sub, "E1", op_code_8]),
             Production("E1", [EPSILON, op_code_9]),
 
             Production("T", [op_code_2, "F", op_code_4, "T1", op_code_5]),
-            Production("T1", ["mul", op_code_6, "F", op_code_10, "T1", op_code_8]),
+            Production("T1", ["mul", op_code_6, "F", op_code_mul, "T1", op_code_8]),
+            Production("T1", ["div", op_code_6, "F", op_code_div, "T1", op_code_8]),
             Production("T1", [EPSILON, op_code_9]),
 
-            Production("F", ["identifier", op_code_3])
+            Production("F", ["identifier", op_code_3]),
+            Production("F", ["number", op_code_7]),
         ]
 
         return productions
@@ -53,10 +56,10 @@ def op_code_6(e_dash_0, _, t, e_dash_1):
     t.her_code = e_dash_0.her_code
     t.her_var = e_dash_0.her_var
 
-def op_code_7(e_dash_0, _, t, e_dash_1):
-    e_dash_1.her_var = t.syn_var + 1
-    code = f"t{e_dash_1.her_var} = t{e_dash_0.her_var} + t{t.syn_var}\n"
-    e_dash_1.her_code = t.syn_code + code
+def op_code_7(t, number):
+    t.syn_var = t.her_var + 1
+    code = f"t{t.syn_var} = {number.token.lexema}\n"
+    t.syn_code = t.her_code + code
 
 def op_code_8(e_dash_0, _, t, e_dash_1):
     e_dash_0.syn_code = e_dash_1.syn_code
@@ -66,7 +69,24 @@ def op_code_9(e_dash, _):
     e_dash.syn_code = e_dash.her_code
     e_dash.syn_var = e_dash.her_var
 
-def op_code_10(t_dash_0, _, f, t_dash_1):
+
+# 
+def op_code_sum(e_dash_0, _, t, e_dash_1):
+    e_dash_1.her_var = t.syn_var + 1
+    code = f"t{e_dash_1.her_var} = t{e_dash_0.her_var} + t{t.syn_var}\n"
+    e_dash_1.her_code = t.syn_code + code
+
+def op_code_sub(e_dash_0, _, t, e_dash_1):
+    e_dash_1.her_var = t.syn_var + 1
+    code = f"t{e_dash_1.her_var} = t{e_dash_0.her_var} - t{t.syn_var}\n"
+    e_dash_1.her_code = t.syn_code + code
+
+def op_code_mul(t_dash_0, _, f, t_dash_1):
     t_dash_1.her_var = f.syn_var + 1
     code = f"t{t_dash_1.her_var} = t{t_dash_0.her_var} * t{f.syn_var}\n"
+    t_dash_1.her_code = f.syn_code + code
+
+def op_code_div(t_dash_0, _, f, t_dash_1):
+    t_dash_1.her_var = f.syn_var + 1
+    code = f"t{t_dash_1.her_var} = t{t_dash_0.her_var} / t{f.syn_var}\n"
     t_dash_1.her_code = f.syn_code + code

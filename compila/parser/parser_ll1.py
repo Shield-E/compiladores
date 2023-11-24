@@ -85,12 +85,12 @@ class ParserLL1:
 
             if node in self.grammar.terminal:
                 raise CompilaSyntacticalError(
-                    f'Unexpected node "{node}" found on stack. You may have some error in your grammar'
+                    f'Unexpected {token.name} "{token.lexema}" found.',
                 )
 
             if (node, token.name) not in self.table:
                 raise CompilaSyntacticalError(
-                    f'Unexpected token "{token.name}" found.',
+                    f'Unexpected {token.name} "{token.lexema}" found.',
                     'Verify your input code.'
                 )
 

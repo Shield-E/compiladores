@@ -4,8 +4,8 @@ from compila.tac_interpreter import TACInterpreter
 
 parser = TestLangParser()
 
-# origin_code = "if (2) {5 + 5 - 2}"
-origin_code = "a + b * c + d / 2"
+origin_code = "if (blin == blon) {bla = 5 + 5 - 2} else {foo = 123 - b}"
+# origin_code = "hello = a + b * c + d / 2"
 
 bla = parser.analyze(origin_code)
 # inter_code = bla.syn_code + "print t0"

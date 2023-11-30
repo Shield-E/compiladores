@@ -13,6 +13,12 @@ class TestLangTokenizer(Tokenizer):
         sub=r"-",
         mul=r"\*",
         div=r"/",
+        assign=r"=",
+        equal=r"==",
+        less_then=r"<",
+        greater_then=r">",
+        less_equal=r"<=",
+        greater_equal=r">=",
         open_parentheses=r"\(",
         close_parentheses=r"\)",
         open_curly_brackets=r"{",
@@ -22,7 +28,7 @@ class TestLangTokenizer(Tokenizer):
 
     reserved_words = [
         "if",
-        "else"
+        "else",
         "for",
         "while",
     ]

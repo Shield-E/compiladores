@@ -10,7 +10,7 @@ class TACInterpreter:
         for i, line in enumerate(tac_code.splitlines()):
             instruction = line.split()
             if self._is_label(instruction):
-                self.memory[instruction[0]] = i
+                self.memory[instruction[0][:-1]] = i
 
     def _execution_loop(self, tac_code: str):
         self.memory["ip"] = ip = 0
@@ -21,14 +21,19 @@ class TACInterpreter:
             self._run_instruction(instruction)
 
     def _run_instruction(self, instruction: list[str]):
-        if len(instruction) == 2:  # print a
+        if len(instruction) == 1 and self._is_label(instruction):
+            pass
+        elif len(instruction) == 2:  # print a
             self._run_command(instruction)
         elif len(instruction) == 3:  # a = b
             self._run_assign(instruction)
         elif len(instruction) == 5:  # a = b + c
-            self._run_op(instruction)
-        elif len(instruction) == 6:
-            self._run_conditional_jump(instruction)
+            if instruction[0] == "if":
+                self._run_conditional_jump(instruction)
+            else:
+                self._run_op(instruction)
+        else:
+            raise ValueError(f"Unknown instruction {instruction}")
     
     def _run_command(self, instruction: list[str]):
         '''
@@ -71,30 +76,35 @@ class TACInterpreter:
             self.memory[a] = self._val(b) * self._val(c)
         elif op == "/":
             self.memory[a] = self._val(b) // self._val(c)
+        elif op == "==":
+            self.memory[a] = int(self._val(b) == self._val(c))
+        elif op == "!=":
+            self.memory[a] = int(self._val(b) != self._val(c))
+        elif op == ">":
+            self.memory[a] = int(self._val(b) > self._val(c))
+        elif op == "<":
+            self.memory[a] = int(self._val(b) < self._val(c))
+        elif op == ">=":
+            self.memory[a] = int(self._val(b) >= self._val(c))
+        elif op == "<=":
+            self.memory[a] = int(self._val(b) <= self._val(c))
         else:
             raise ValueError(f"Invalid operand {op}")
 
     def _run_conditional_jump(self, instruction: list[str]):
         '''
-        if a cmp b goto label
+        if cond var goto label
         '''
-        a = instruction[1]
-        cmp = instruction[2]
-        b = instruction[3]
-        label = instruction[5]
+        cond = instruction[1]
+        var = instruction[2]
+        label = instruction[4]
         
-        if cmp == "==":
-            condition = self._val(a) == self._val(b)
-        elif cmp == "!=":
-            condition = self._val(a) != self._val(b)
-        elif cmp == ">":
-            condition = self._val(a) > self._val(b)
-        elif cmp == "<":
-            condition = self._val(a) < self._val(b)
-        elif cmp == ">=":
-            condition = self._val(a) >= self._val(b)
-        elif cmp == "<=":
-            condition = self._val(a) <= self._val(b)
+        if cond == "true":
+            condition = self._val(var)
+        elif cond == "false":
+            condition = not self._val(var)
+        else:
+            raise ValueError(f"Invalid condition {cond}")
 
         if condition:
             self.memory["ip"] = self.memory[label]

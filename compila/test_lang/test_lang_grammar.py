@@ -42,7 +42,11 @@ class TestLangGrammar(Grammar):
             Production("ATRIB", ["identifier", "assign", "EXPRESSION", op_assign]),
 
             Production("CONDITION", [op_cmp_0, "E", op_cmp_1, "CONDITION_1", op_cmp_2]),
-            Production("CONDITION_1", ["equal", op_cmp_3, "E", op_cmp_equal]),
+            Production("CONDITION_1", ["equal", op_cmp_3, "E", op_cmp_eq]),
+            Production("CONDITION_1", ["less_then", op_cmp_3, "E", op_cmp_lt]),
+            Production("CONDITION_1", ["greater_then", op_cmp_3, "E", op_cmp_gt]),
+            Production("CONDITION_1", ["less_equal", op_cmp_3, "E", op_cmp_le]),
+            Production("CONDITION_1", ["greater_equal", op_cmp_3, "E", op_cmp_ge]),
             Production("CONDITION_1", [EPSILON, op_cmp_empty]),
 
             Production("EXPRESSION", [op_expr_start, "E", op_expr_end]),
@@ -81,7 +85,7 @@ def op_statements_1(statements, atrib):
 
 def op_if(if_stmt, _0, _1, condition, _2, _3, block, _4, else_stmt):
     label_false = if_stmt.label_counter.next()
-    if_code = f"if {condition.var} == 0 goto {label_false}\n"
+    if_code = f"if false {condition.var} goto {label_false}\n"
 
     if else_stmt.code:
         label_end = if_stmt.label_counter.next()
@@ -129,15 +133,43 @@ def op_cmp_2(condition, expression, condition_1):
 def op_cmp_3(condition, _, expression):
     expression.var_counter = condition.var_counter
 
-def op_cmp_equal(condition, _, expression):
-    condition.var = "t0"
+def op_cmp_eq(condition, _, expression):
+    condition.var = condition.var_counter.next()
     condition.code = (
         expression.code 
         + f"{condition.var} = {condition.her_var} == {expression.var}\n"
     )
 
+def op_cmp_lt(condition, _, expression):
+    condition.var = condition.var_counter.next()
+    condition.code = (
+        expression.code 
+        + f"{condition.var} = {condition.her_var} < {expression.var}\n"
+    )
+
+def op_cmp_gt(condition, _, expression):
+    condition.var = condition.var_counter.next()
+    condition.code = (
+        expression.code 
+        + f"{condition.var} = {condition.her_var} > {expression.var}\n"
+    )
+
+def op_cmp_le(condition, _, expression):
+    condition.var = condition.var_counter.next()
+    condition.code = (
+        expression.code 
+        + f"{condition.var} = {condition.her_var} <= {expression.var}\n"
+    )
+
+def op_cmp_ge(condition, _, expression):
+    condition.var = condition.var_counter.next()
+    condition.code = (
+        expression.code 
+        + f"{condition.var} = {condition.her_var} >= {expression.var}\n"
+    )
+
 def op_cmp_empty(condition, _):
-    condition.var = "t0"
+    condition.var = condition.var_counter.next()
     condition.code = f"{condition.var} = {condition.her_var} != 0\n"
 
 # Semantic rules to generate code for expressions

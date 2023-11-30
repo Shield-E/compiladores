@@ -11,5 +11,5 @@ bla = parser.analyze(origin_code)
 inter_code = bla.syn_code + "print t0"
 print(inter_code)
 
-interpreter = TACInterpreter()
-interpreter.run(inter_code)
+# interpreter = TACInterpreter()
+# interpreter.run(inter_code)

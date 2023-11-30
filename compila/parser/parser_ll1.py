@@ -105,8 +105,9 @@ class ParserLL1:
                 if callable(val):
                     rule = SemanticRule(
                         val,
+                        self,
                         node,
-                        *avaliable_params,
+                        avaliable_params,
                     )
                     to_stack[i] = rule
 

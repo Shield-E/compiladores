@@ -10,8 +10,28 @@ class TestLangTokenizer(Tokenizer):
         identifier=r"[a-zA-Z]([a-zA-Z]|[0-9])*",
         number=r"[0-9]+",
         add=r"\+",
+        sub=r"-",
+        mul=r"\*",
+        div=r"/",
+        assign=r"=",
+        equal=r"==",
+        less_then=r"<",
+        greater_then=r">",
+        less_equal=r"<=",
+        greater_equal=r">=",
+        open_parentheses=r"\(",
+        close_parentheses=r"\)",
+        open_curly_brackets=r"{",
+        close_curly_brackets=r"}",
         _=r" ",
     )
+
+    reserved_words = [
+        "if",
+        "else",
+        "for",
+        "while",
+    ]
 
     def run(self, string: str) -> Generator[Token]:
         all_machines = {
@@ -32,6 +52,10 @@ class TestLangTokenizer(Tokenizer):
             index += len(best_match)
 
             if token_name == "_":
+                continue
+            
+            if (token_name == "identifier") and (best_match in self.reserved_words):
+                yield Token(best_match, best_match)
                 continue
 
             if not best_match:

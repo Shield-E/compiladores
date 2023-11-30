@@ -39,6 +39,7 @@ class SemanticRule(partial):
 class ParserLL1:
     def __init__(self, tokenizer: Tokenizer, grammar: Grammar):
         self.stacktrace = list()
+        self.semantic_on = True
         self.set_tokenizer(tokenizer)
         self.set_grammar(grammar)
 
@@ -73,21 +74,24 @@ class ParserLL1:
                 continue
 
             if isinstance(node, SemanticRule):
-                node()
+                if self.semantic_on:
+                    node()
                 continue
 
             if node == token.name:
+                node.token = token
                 index += 1
                 continue
 
             if node in self.grammar.terminal:
                 raise CompilaSyntacticalError(
-                    f'Unexpected node "{node}" found on stack. You may have some error in your grammar'
+                    f'Unexpected {token.name} "{token.lexema}" found.',
                 )
 
             if (node, token.name) not in self.table:
                 raise CompilaSyntacticalError(
-                    f'Unexpected token "{token}" found. Verify your input code.'
+                    f'Unexpected {token.name} "{token.lexema}" found.',
+                    'Verify your input code.'
                 )
 
             production = self.table[node, token.name]
@@ -101,8 +105,9 @@ class ParserLL1:
                 if callable(val):
                     rule = SemanticRule(
                         val,
+                        self,
                         node,
-                        *avaliable_params,
+                        avaliable_params,
                     )
                     to_stack[i] = rule
 

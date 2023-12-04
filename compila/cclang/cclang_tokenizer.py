@@ -10,8 +10,38 @@ class CCLangTokenizer(Tokenizer):
         identifier=r"[a-zA-Z]([a-zA-Z]|[0-9])*",
         number=r"[0-9]+",
         add=r"\+",
+        sub=r"-",
+        mul=r"\*",
+        div=r"/",
+        assign=r"=",
+        equal=r"==",
+        less_then=r"<",
+        greater_then=r">",
+        less_equal=r"<=",
+        greater_equal=r">=",
+        open_parentheses=r"\(",
+        close_parentheses=r"\)",
+        open_curly_brackets=r"{",
+        close_curly_brackets=r"}",
         _=r" ",
     )
+
+    reserved_words = [
+        "def",
+        "if",
+        "else",
+        "for",
+        "while",
+        "def",
+        "int",
+        "float",
+        "string",
+        "print",
+        "read",
+        "return",
+        "new",
+        "null",
+    ]
 
     def run(self, string: str) -> Generator[Token]:
         all_machines = {

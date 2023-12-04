@@ -23,14 +23,27 @@ class TestLangTokenizer(Tokenizer):
         close_parentheses=r"\)",
         open_curly_brackets=r"{",
         close_curly_brackets=r"}",
+        open_bracket=r"[",
+        close_bracket=r"]",
+        comma=r",",
+        semicolon=r";",
         _=r" ",
     )
 
     reserved_words = [
+        "def",
         "if",
         "else",
         "for",
         "while",
+        "int",
+        "float",
+        "string",
+        "print",
+        "read",
+        "return",
+        "new",
+        "null",
     ]
 
     def run(self, string: str) -> Generator[Token]:
@@ -56,9 +69,11 @@ class TestLangTokenizer(Tokenizer):
             
             if (token_name == "identifier") and (best_match in self.reserved_words):
                 yield Token(best_match, best_match)
+                #print(best_match)
                 continue
 
             if not best_match:
                 raise CompilaLexicalError("Invalid expression.")
 
             yield Token(token_name, lexema=best_match)
+            #print(best_match)

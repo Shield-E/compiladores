@@ -69,11 +69,9 @@ class TestLangTokenizer(Tokenizer):
             
             if (token_name == "identifier") and (best_match in self.reserved_words):
                 yield Token(best_match, best_match)
-                #print(best_match)
                 continue
 
             if not best_match:
                 raise CompilaLexicalError("Invalid expression.")
 
             yield Token(token_name, lexema=best_match)
-            #print(best_match)

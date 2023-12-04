@@ -27,7 +27,7 @@ class CCLangTokenizer(Tokenizer):
         close_bracket=r"]",
         comma=r",",
         semicolon=r";",
-        _=r" ",
+        _=r" |\n",
     )
 
     reserved_words = [

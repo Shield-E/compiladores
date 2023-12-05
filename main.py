@@ -13,6 +13,7 @@ def matrixmult(int matA, int matB) {
             for(k = 0; k < 6; k = k + 1) {
                 matResult[i][j] = matResult[i][j] + matA[i][k] * matB[k][j];
                 print matResult;
+                a = func(a) + func(b);
                 return;
             }
         }

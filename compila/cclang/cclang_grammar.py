@@ -57,9 +57,9 @@ class CCLangGrammar(Grammar):
 
             Production("ATRIBSTAT`", ["EXPRESSION"]),
             Production("ATRIBSTAT`", ["ALLOCEXPRESSION"]),
-            # Production("ATRIBSTAT`", ["FUNCCALL"]),
+            # Production("ATRIBSTAT`", ["#", "FUNCCALL"]),
 
-            Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
+            # Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
 
             Production("PARAMLISTCALL", ["identifier", "PARAMLISTCALL`"]),
             Production("PARAMLISTCALL", [EPSILON]),
@@ -137,8 +137,10 @@ class CCLangGrammar(Grammar):
             Production("LVALUE", ["identifier", "LVALUE`"]),
 
             Production("LVALUE`", ["LVALUELOOP"]),
+            Production("LVALUE`", ["LVALUEFUNCCALL"]), #
             Production("LVALUE`", [EPSILON]),
 
+            Production("LVALUEFUNCCALL", ["(", "PARAMLISTCALL", ")"]), #
             Production("LVALUELOOP", ["[", "NUMEXPRESSION", "]", "LVALUELOOP"]),
             Production("LVALUELOOP", [EPSILON]),
         ]

@@ -157,10 +157,12 @@ class ParserLL1:
             # +1 to compensate the newline char
             chars += len(line) + 1
 
-        spaces = " " * (token.index - chars - len(token.lexema))
+        col = (token.index - chars - len(token.lexema))
+
+        spaces = " " * col
         markers = "^" * len(token.lexema)
         return (
-            f"At line {i + 1}",
+            f"At row {i + 1} and col {col + 1}",
             RED_COLOR + line,
             spaces + markers + DISABLE_COLOR
         )

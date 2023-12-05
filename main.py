@@ -28,6 +28,11 @@ def analyze_file(path):
         print(f'Error on file "{path}".')
         print(error)
     else:
+        for i, tree in enumerate(parser.expression_trees):
+            print(f"INORDER FOR EXPRESSION {i}:")
+            tree.print_inorder()
+            print()
+
         print("Everything right!")
 
 

@@ -8,6 +8,8 @@ from compila.error import CompilaSyntacticalError
 from compila.parser.grammar import Grammar
 from compila.parser.tokenizer import Token, Tokenizer
 
+RED_COLOR = "\033[31m"
+DISABLE_COLOR = "\033[0m"
 
 class LL1Table(dict):
     def __str__(self):
@@ -84,14 +86,17 @@ class ParserLL1:
                 continue
 
             if node in self.grammar.terminal:
+                error_hint = self.get_error_info(string, token)
                 raise CompilaSyntacticalError(
-                    f'Unexpected {token.name} "{token.lexema}" found.',
+                    f'Unexpected {token} found.',
+                    *error_hint,
                 )
 
             if (node, token.name) not in self.table:
+                error_hint = self.get_error_info(string, token)
                 raise CompilaSyntacticalError(
-                    f'Unexpected {token.name} "{token.lexema}" found.',
-                    'Verify your input code.'
+                    f'Unexpected {token} found.',
+                    *error_hint,
                 )
 
             production = self.table[node, token.name]
@@ -140,3 +145,19 @@ class ParserLL1:
                     table[production.origin, symbol] = production
 
         self.table = table
+
+    def get_error_info(self, string:str, token:Token):
+        chars = 0
+        for i, line in enumerate(string.splitlines()):
+            if 0 <= token.index < chars + len(line):
+                break
+            # +1 to compensate the newline char
+            chars += len(line) + 1
+
+        spaces = " " * (token.index - chars - 1)
+        markers = "^" * len(token.lexema)
+        return (
+            f"At line {i + 1}",
+            RED_COLOR + line,
+            spaces + markers + DISABLE_COLOR
+        )

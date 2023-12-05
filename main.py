@@ -2,29 +2,34 @@ from compila.cclang import CCLangParser
 from compila.error import CompilaError
 from compila.tac_interpreter import TACInterpreter
 
+from pathlib import Path
+
+
 parser = CCLangParser()
 
-origin_code = '''
-def matrixmult(int matA, int matB) {
-    for(i = 0; i < 6; i = i + 1) 
-        for(j = 0; j < 6; j = j + 1) {
-            int matResult[5][5];
-            matResult[i][j] = 0;
-            for(k = 0; k < 6; k = k + 1) {
-                matResult[i][j] = matResult[i][j] + matA[i][k] * matB[k][j];
-                print matResult;
-                a = func(a) + func(b);
-                return;
-            }
-        }
-}
-'''
 
-bla = parser.analyze(origin_code)
-# inter_code = bla.code + "print bla"
+def analyze_file(path):
+    path = Path(path)
+    if not path.exists():
+        print("Invalid path!")
+        return
+    
+    with open(path) as file:
+        string = file.read() 
 
-# print(inter_code)
-# print()
 
-# interpreter = TACInterpreter()
-# interpreter.run(inter_code)
+    try:
+        parser.analyze(string)
+    except CompilaError as error:
+        print(f'Error on file "{path}".')
+        print(error)
+    else:
+        print("Everything right!")
+
+
+def main():
+    analyze_file("example/matrixmult.ccc")
+
+
+if __name__ == "__main__":
+    main()

@@ -33,7 +33,7 @@ class RegexGrammar(Grammar):
             prod = Production("SYMBOL", [i, op_symbol])
             productions.append(prod)
 
-        for i in "+*?\\|()n":
+        for i in "+*?\\|()nt":
             prod = Production("SPECIAL_SYMBOL", [i, op_special_symbol])
             productions.append(prod)
 
@@ -141,4 +141,6 @@ def op_special_symbol(parser, origin, target):
     char = target[0]
     if char == "n":
         char = "\n"
+    elif char == "t":
+        char = "\t"
     origin.syn_tree = SymbolNode(char)

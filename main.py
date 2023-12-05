@@ -1,8 +1,8 @@
-from compila.test_lang import TestLangParser
+from compila.cclang import CCLangParser
 from compila.error import CompilaError
 from compila.tac_interpreter import TACInterpreter
 
-parser = TestLangParser()
+parser = CCLangParser()
 
 origin_code = "def matrixmult(int matA, int matB){ for(i = 0; i < 6; i = i + 1) for(j = 0; j < 6; j = j + 1) int matResult[5][5]; matResult[i][j] = 0; for(k = 0; k < 6; k = k + 1) matResult[i][j] = matResult[i][j] + matA[i][k] * matB[k][j]; print matResult; return;}"
 

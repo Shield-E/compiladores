@@ -37,8 +37,8 @@ class CCLangGrammar(Grammar):
             Production("STATEMENT", ["PRINTSTAT", ";"]),
             Production("STATEMENT", ["READSTAT", ";"]),
             Production("STATEMENT", ["RETURNSTAT", ";"]),
-            Production("STATEMENT", ["IFSTAT", ";"]),
-            Production("STATEMENT", ["FORSTAT", ";"]),
+            Production("STATEMENT", ["IFSTAT"]),
+            Production("STATEMENT", ["FORSTAT"]),
             Production("STATEMENT", ["{", "STATELIST", "}"]),
             Production("STATEMENT", ["break", ";"]),
             Production("STATEMENT", [";"]),
@@ -57,7 +57,7 @@ class CCLangGrammar(Grammar):
 
             Production("ATRIBSTAT`", ["EXPRESSION"]),
             Production("ATRIBSTAT`", ["ALLOCEXPRESSION"]),
-            Production("ATRIBSTAT`", ["FUNCCALL"]),
+            # Production("ATRIBSTAT`", ["FUNCCALL"]),
 
             Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
 
@@ -67,9 +67,9 @@ class CCLangGrammar(Grammar):
             Production("PARAMLISTCALL`", ["," , "PARAMLISTCALL"]),
             Production("PARAMLISTCALL`", [EPSILON]),
 
-            Production("PRINTSTAT", ["print", "EXPRESSION", ";"]),
+            Production("PRINTSTAT", ["print", "EXPRESSION"]),
 
-            Production("READSTAT", ["read", "LVALUE", ";"]),
+            Production("READSTAT", ["read", "LVALUE"]),
 
             Production("RETURNSTAT", ["return"]),
 
@@ -115,7 +115,7 @@ class CCLangGrammar(Grammar):
 
             Production("TERM", ["UNARYEXPR", "TERM`"]),
 
-            Production("TERM`", ["UNARYEXPR", "TERMLOOP"]),
+            Production("TERM`", ["TERMLOOP"]),
             Production("TERM`", [EPSILON]),
 
             Production("TERMLOOP", ["*", "UNARYEXPR", "TERMLOOP"]),
@@ -141,7 +141,6 @@ class CCLangGrammar(Grammar):
 
             Production("LVALUELOOP", ["[", "NUMEXPRESSION", "]", "LVALUELOOP"]),
             Production("LVALUELOOP", [EPSILON]),
-
         ]
 
         return productions

@@ -69,6 +69,8 @@ class ParserLL1:
             stacksnapshot = str(stack)
             self.stacktrace.append(stacksnapshot)
 
+            # print(stacksnapshot)
+
             token = tokens[index]
             node = stack.pop()
 
@@ -154,7 +156,7 @@ class ParserLL1:
             # +1 to compensate the newline char
             chars += len(line) + 1
 
-        spaces = " " * (token.index - chars - 1)
+        spaces = " " * (token.index - chars - len(token.lexema))
         markers = "^" * len(token.lexema)
         return (
             f"At line {i + 1}",

@@ -45,8 +45,9 @@ class CCLangGrammar(Grammar):
 
             Production("VARDECL", ["INTFLOATSTR", "VARDECL`"]),
 
-            Production("VARDECL`", ["identifier"]),
-            Production("VARDECL`", ["identifier", "INTCONSTANTLOOP"]),
+            Production("VARDECL`", ["identifier", "VARDECL``"]),
+            Production("VARDECL``", ["INTCONSTANTLOOP"]),
+            Production("VARDECL``", [EPSILON]),
 
             Production("INTCONSTANTLOOP", ["[", "int_constant", "]", "INTCONSTANTLOOP`"]),
 

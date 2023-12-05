@@ -6,29 +6,29 @@ from compila.parser.tokenizer import Token, Tokenizer
 
 
 class CCLangTokenizer(Tokenizer):
-    all_expressions = dict(
-        identifier=r"[a-zA-Z]([a-zA-Z]|[0-9])*",
-        number=r"[0-9]+",
-        add=r"\+",
-        sub=r"-",
-        mul=r"\*",
-        div=r"/",
-        assign=r"=",
-        equal=r"==",
-        less_then=r"<",
-        greater_then=r">",
-        less_equal=r"<=",
-        greater_equal=r">=",
-        open_parentheses=r"\(",
-        close_parentheses=r"\)",
-        open_curly_brackets=r"{",
-        close_curly_brackets=r"}",
-        open_bracket=r"[",
-        close_bracket=r"]",
-        comma=r",",
-        semicolon=r";",
-        _=r" |\n",
-    )
+    all_expressions = {
+        "identifier"    :r"[a-zA-Z]([a-zA-Z]|[0-9])*",
+        "int_constant"  :r"[0-9]+",
+        "+"             :r"\+",
+        "-"             :r"-",
+        "*"             :r"\*",
+        "/"             :r"/",
+        "="             :r"=",
+        "=="            :r"==",
+        "<"             :r"<",
+        ">"             :r">",
+        "<="            :r"<=",
+        ">="            :r">=",
+        "("             :r"\(",
+        ")"             :r"\)",
+        "{"             :r"{",
+        "}"             :r"}",
+        "["             :r"[",
+        "]"             :r"]",
+        ","             :r",",
+        ";"             :r";",
+        "_"             :r" |\n",
+    }
 
     reserved_words = [
         "def",
@@ -68,10 +68,10 @@ class CCLangTokenizer(Tokenizer):
                 continue
             
             if (token_name == "identifier") and (best_match in self.reserved_words):
-                yield Token(best_match, best_match)
+                yield Token(best_match, best_match, index)
                 continue
 
             if not best_match:
                 raise CompilaLexicalError("Invalid expression.")
 
-            yield Token(token_name, lexema=best_match)
+            yield Token(token_name, lexema=best_match, index=index)

@@ -19,7 +19,7 @@ class CCLangGrammar(Grammar):
             Production("FUNCLIST`", ["[","FUNCLIST","]"]),
             Production("FUNCLIST`", [EPSILON]),
 
-            Production("FUNCDEF", ["def", "ident", "(", "PARAMLIST", ")", '(', "STATELIST", ")"]),
+            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', "STATELIST", "}"]),
 
             Production("INTFLOATSTR", ["int"]),
             Production("INTFLOATSTR", ["float"]),
@@ -27,7 +27,7 @@ class CCLangGrammar(Grammar):
 
             Production("PARAMLIST", ["INTFLOATSTR", "PARAMLIST`"]),
 
-            Production("PARAMLIST`", ["ident", "PARAMLIST``"]),
+            Production("PARAMLIST`", ["identifier", "PARAMLIST``"]),
 
             Production("PARAMLIST``", ["," , "PARAMLIST"]),
             Production("PARAMLIST``", [EPSILON]),
@@ -45,8 +45,8 @@ class CCLangGrammar(Grammar):
 
             Production("VARDECL", ["INTFLOATSTR", "VARDECL`"]),
 
-            Production("VARDECL`", ["ident"]),
-            Production("VARDECL`", ["ident", "INTCONSTANTLOOP"]),
+            Production("VARDECL`", ["identifier"]),
+            Production("VARDECL`", ["identifier", "INTCONSTANTLOOP"]),
 
             Production("INTCONSTANTLOOP", ["[", "int_constant", "]", "INTCONSTANTLOOP`"]),
 
@@ -59,9 +59,9 @@ class CCLangGrammar(Grammar):
             Production("ATRIBSTAT`", ["ALLOCEXPRESSION"]),
             Production("ATRIBSTAT`", ["FUNCCALL"]),
 
-            Production("FUNCCALL", ["ident", "(", "PARAMLISTCALL", ")"]),
+            Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
 
-            Production("PARAMLISTCALL", ["ident", "PARAMLISTCALL`"]),
+            Production("PARAMLISTCALL", ["identifier", "PARAMLISTCALL`"]),
             Production("PARAMLISTCALL", [EPSILON]),
 
             Production("PARAMLISTCALL`", ["," , "PARAMLISTCALL"]),
@@ -134,7 +134,7 @@ class CCLangGrammar(Grammar):
             Production("FACTOR", ["LVALUE"]),
             Production("FACTOR", ["(", "NUMEXPRESSION", ")"]),
 
-            Production("LVALUE", ["ident", "LVALUE`"]),
+            Production("LVALUE", ["identifier", "LVALUE`"]),
 
             Production("LVALUE`", ["LVALUELOOP"]),
             Production("LVALUE`", [EPSILON]),

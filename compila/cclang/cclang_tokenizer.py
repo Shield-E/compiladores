@@ -7,7 +7,7 @@ from compila.parser.tokenizer import Token, Tokenizer
 
 class CCLangTokenizer(Tokenizer):
     all_expressions = {
-        "identifier"    :r"[a-zA-Z]([a-zA-Z]|[0-9])*",
+        "identifier"    :r"([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*",
         "int_constant"  :r"[0-9]+",
         "+"             :r"\+",
         "-"             :r"-",

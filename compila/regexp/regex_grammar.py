@@ -28,7 +28,7 @@ class RegexGrammar(Grammar):
             Production("GROUP", ["\\", "SPECIAL_SYMBOL", op2_group]),
         ]
 
-        regex_safe_symbols = " \n!@#$%¨&/-={,.;}'[]\"<>"
+        regex_safe_symbols = " \n!@#$%¨&_/-={,.;}'[]\"<>"
         for i in ALPHANUMERIC + regex_safe_symbols:
             prod = Production("SYMBOL", [i, op_symbol])
             productions.append(prod)

@@ -41,6 +41,7 @@ def main():
     analyze_file(args.path)
     
     if args.stacktrace:
+        print("STACKTRACE:")
         for trace in parser.stacktrace:
             print(trace)
 

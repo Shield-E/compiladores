@@ -7,27 +7,29 @@ from compila.parser.tokenizer import Token, Tokenizer
 
 class CCLangTokenizer(Tokenizer):
     all_expressions = {
-        "identifier"    :r"([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*",
-        "int_constant"  :r"[0-9]+",
-        "+"             :r"\+",
-        "-"             :r"-",
-        "*"             :r"\*",
-        "/"             :r"/",
-        "="             :r"=",
-        "=="            :r"==",
-        "<"             :r"<",
-        ">"             :r">",
-        "<="            :r"<=",
-        ">="            :r">=",
-        "("             :r"\(",
-        ")"             :r"\)",
-        "{"             :r"{",
-        "}"             :r"}",
-        "["             :r"[",
-        "]"             :r"]",
-        ","             :r",",
-        ";"             :r";",
-        "_"             :r" |\n|\t",
+        "identifier"        :r"([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*",
+        "int_constant"      :r"[0-9]+",
+        "string_constant"   :r"\"([a-zA-Z]|[0-9]| |_|.|,|:|;|!|0|@|#|$|%|¨|&|/|-|=|{|}|'|[|]|\\)*\"",
+        "+"                 :r"\+",
+        "-"                 :r"-",
+        "*"                 :r"\*",
+        "/"                 :r"/",
+        "="                 :r"=",
+        "=="                :r"==",
+        "!="                :r"!=",
+        "<"                 :r"<",
+        ">"                 :r">",
+        "<="                :r"<=",
+        ">="                :r">=",
+        "("                 :r"\(",
+        ")"                 :r"\)",
+        "{"                 :r"{",
+        "}"                 :r"}",
+        "["                 :r"[",
+        "]"                 :r"]",
+        ","                 :r",",
+        ";"                 :r";",
+        "_"                 :r" |\n|\t",
     }
 
     reserved_words = [
@@ -89,10 +91,7 @@ class CCLangTokenizer(Tokenizer):
             # +1 to compensate the newline char
             chars += len(line) + 1
 
-        spaces = " " * (index - chars)
-        markers = "^"
         return (
             f"At line {i + 1}",
-            RED_COLOR + line,
-            spaces + markers + DISABLE_COLOR
+            RED_COLOR + line + DISABLE_COLOR,
         )

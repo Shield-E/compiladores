@@ -16,7 +16,7 @@ class CCLangGrammar(Grammar):
 
             Production("FUNCLIST", ["FUNCDEF","FUNCLIST`"]),
 
-            Production("FUNCLIST`", ["[","FUNCLIST","]"]),
+            Production("FUNCLIST`", ["FUNCDEF", "FUNCLIST`"]),
             Production("FUNCLIST`", [EPSILON]),
 
             Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', "STATELIST", "}"]),
@@ -25,12 +25,10 @@ class CCLangGrammar(Grammar):
             Production("INTFLOATSTR", ["float"]),
             Production("INTFLOATSTR", ["str"]),
 
-            Production("PARAMLIST", ["INTFLOATSTR", "PARAMLIST`"]),
-
-            Production("PARAMLIST`", ["identifier", "PARAMLIST``"]),
-
-            Production("PARAMLIST``", ["," , "PARAMLIST"]),
-            Production("PARAMLIST``", [EPSILON]),
+            Production("PARAMLIST", ["INTFLOATSTR", "identifier", "PARAMLIST`"]),
+            Production("PARAMLIST`", ["," , "PARAMLIST"]),
+            Production("PARAMLIST`", [EPSILON]),
+            Production("PARAMLIST", [EPSILON]),
 
             Production("STATEMENT", ["VARDECL", ";"]),
             Production("STATEMENT", ["ATRIBSTAT", ";"]),

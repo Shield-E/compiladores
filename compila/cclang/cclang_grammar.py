@@ -74,9 +74,9 @@ class CCLangGrammar(Grammar):
 
             Production("RETURNSTAT", ["return"]),
 
-            Production("IFSTAT", ["if", "(", "EXPRESSION", ")", "IFSTAT`"]),
+            Production("IFSTAT", ["if", "(", "EXPRESSION", ")", "STATEMENT", "IFSTAT`"]),
 
-            Production("IFSTAT`", ["STATEMENT"]),
+            Production("IFSTAT`", [EPSILON]),
             Production("IFSTAT`", ["else", "STATEMENT"]),
 
             Production("FORSTAT", ["for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", "STATEMENT"]),

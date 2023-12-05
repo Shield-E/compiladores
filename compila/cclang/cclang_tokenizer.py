@@ -9,6 +9,7 @@ class CCLangTokenizer(Tokenizer):
     all_expressions = {
         "identifier"        :r"([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*",
         "int_constant"      :r"[0-9]+",
+        "float_constant"    :r"(-|\+)?[0-9]*.[0-9]+",
         "string_constant"   :r"\"([a-zA-Z]|[0-9]| |_|.|,|:|;|!|0|@|#|$|%|¨|&|/|-|=|{|}|'|[|]|\\)*\"",
         "+"                 :r"\+",
         "-"                 :r"-",

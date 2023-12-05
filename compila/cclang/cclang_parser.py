@@ -11,3 +11,4 @@ class CCLangParser(ParserLL1):
         tokenizer = CCLangTokenizer()
         grammar = CCLangGrammar()
         super().__init__(tokenizer, grammar)
+        self.expression_trees = []

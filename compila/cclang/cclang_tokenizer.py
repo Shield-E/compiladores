@@ -72,6 +72,26 @@ class CCLangTokenizer(Tokenizer):
                 continue
 
             if not best_match:
-                raise CompilaLexicalError("Invalid expression.")
+                error_hint = self.get_error_info(string, index)
+                raise CompilaLexicalError("Invalid expression.", *error_hint)
 
             yield Token(token_name, lexema=best_match, index=index)
+
+    def get_error_info(self, string:str, index: int):
+        RED_COLOR = "\033[31m"
+        DISABLE_COLOR = "\033[0m"
+
+        chars = 0
+        for i, line in enumerate(string.splitlines()):
+            if 0 <= index < chars + len(line):
+                break
+            # +1 to compensate the newline char
+            chars += len(line) + 1
+
+        spaces = " " * (index - chars)
+        markers = "^"
+        return (
+            f"At line {i + 1}",
+            RED_COLOR + line,
+            spaces + markers + DISABLE_COLOR
+        )

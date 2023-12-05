@@ -8,8 +8,6 @@ from compila.error import CompilaSyntacticalError
 from compila.parser.grammar import Grammar
 from compila.parser.tokenizer import Token, Tokenizer
 
-RED_COLOR = "\033[31m"
-DISABLE_COLOR = "\033[0m"
 
 class LL1Table(dict):
     def __str__(self):
@@ -149,6 +147,9 @@ class ParserLL1:
         self.table = table
 
     def get_error_info(self, string:str, token:Token):
+        RED_COLOR = "\033[31m"
+        DISABLE_COLOR = "\033[0m"
+
         chars = 0
         for i, line in enumerate(string.splitlines()):
             if 0 <= token.index < chars + len(line):

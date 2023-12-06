@@ -1,4 +1,136 @@
+def ce() {}
+
+def sqrt(int n){
+	return;
+}
+
+def strlen(string s){
+	return;
+}
+
+def prime(int pr){
+	int i;
+	if(pr == 1){
+		return;
+	}
+	for (i = 2; i <= sqrt(pr); i = i + 1){
+		if (pr % i == 0){
+            	return;
+		}
+	}
+	return;
+}
+
+def ce(){
+	int i;
+	int j;
+	int t;
+    int k;
+    k = 0;
+	int flag;
+	int p;
+	int q;
+	int e;
+	int d;
+	int key;
+
+    for (i = 2; i < t; i = i + 1) {  
+        if (t % i == 0) {
+            break;  
+
+	}
+        flag = prime(i);  
+        if (flag == 1){
+		if (i != p){
+			if(i != q) {
+				int bla;
+				bla = e[k];
+				e[k] = i;  
+            			flag = ce(bla);  
+           			if (flag > 0){  
+                			d[k] = flag;  
+                			k = k + 1;  
+            			}  
+            			if (k == 99){  
+                			break;
+				}  
+			}
+		}  
+            
+        }  
+    }  
+}
+
+def encrypt(string msg, string key){
+	int e;
+	int pt; 
+	int ct;
+	key = e[0];
+	int i;
+	int j;
+	int k;
+	int len;
+	int n;
+	int temp;
+	int en[256];
+
+   	len = strlen(msg);  
+    	for(i = 0; i < len; i = i + 1){  
+       		pt = msg[i];  
+       	 	pt = pt - 96;  
+       	 	k = 1;  
+       	 	for (j = 0; j < key; j = j + 1){  
+      	      		k = k * pt;  
+      	      		k = k % n;  
+      	  	}  
+      	  temp[i] = k;  
+      	  ct = k + 96;  
+      	  en[i] = ct;    
+   	 }  
+
+   	 en[i] = -1;  
+   	 print "THE ENCRYPTED MESSAGE IS: ";  
+  	 for (i = 0; en[i] != -1; i = i + 1){
+  	      print(en[i]);
+	 }    
+}
+
+def decrypt(string d, int key){
+	int pt; 
+	int ct;
+	int len;
+	key = d[0];
+	int i;
+	int j;
+	int k;
+	int n;
+	int m;
+	int temp;
+
+	for(i = 0; i < len; i = i + 1){
+		ct = temp[i];  
+        	k = 1;  
+        	for (j = 0; j < key; j = j + 1){  
+            		k = k * ct;  
+            		k = k % n;  
+        	}  
+        	pt = k + 96;
+        	m[i] = pt;    
+	}
+	m[i] = -1;  
+	print "THE DECRYPTED MESSAGE IS: ";  
+    	for (i = 0; m[i] != -1; i = i + 1){  
+        	print m[i];  
+	}
+}
+
 def main(){
+	int p;
+	int q;
+	int t;
+	int i;
+	int j;
+	int flag;
 
 	print "ENTER FIRST PRIME NUMBER: ";
 	read p;
@@ -25,127 +157,34 @@ def main(){
 	}
 
 	print "ENTER MESSAGE: ";
+	string msg;
 	read msg;
-	string m[100] = new string[100];
+	string m[100];
+	m = new string[100];
 	for (i = 0; i < strlen(msg); i = i + 1){  
         	m[i] = msg[i];
 	}
+	int n;
 	n = p * q;  
     	t = (p - 1) * (q - 1);  
   
-    	ce();  
+	string bla;
+	bla = ce();  
   
-    	print("POSSIBLE VALUES OF e AND d ARE: ");  
-	int e[100] = new int[100];
-	int d[100] = new int[100];
+	print("POSSIBLE VALUES OF e AND d ARE: ");  
+	int e[100];
+	e = new int[100];
+	int d[100];
+	d = new int[100];
 
-    	for (i = 0; i < j - 1; i = i + 1){  
-        	print e[i];
+	for (i = 0; i < j - 1; i = i + 1){  
+		print e[i];
 		print d[i];
 	}  
-  	int en[100] = new int[100];
-    	encrypt();  
-    	decrypt();  
-  
-    	return;  
+  	int en[100];
+	e = new int[100];
+	d = encrypt(m, p);  
+	m = decrypt(d, p);  
 
-}
-
-def prime(pr){
-	int i;
-	if(pr == 1){
-		return;
-	}
-	for (i = 2; i <= sqrt(pr); i = i + 1){
-		if (pr % i == 0){
-            	return;
-		}
-	}
-	return;
-}
-
-def sqrt(n){
-	return;
-}
-
-def strlen(s){
-	return;
-}
-
-def ce(){
-    int k;  
-    k = 0;  
-    for (i = 2; i < t; i = i + 1){  
-        if (t % i == 0){
-            break;  
-	}
-        flag = prime(i);  
-        if (flag == 1){
-		if (i != p){
-			if(i != q){
-				e[k] = i;  
-            			flag = cd(e[k]);  
-           			if (flag > 0){  
-                			d[k] = flag;  
-                			k = k + 1;  
-            			}  
-            			if (k == 99){  
-                			break;
-				}  
-			}
-		}  
-            
-        }  
-    }  
-}
-
-def encrypt(){
-	int pt; 
-	int ct;
-	int key; 
-	key = e[0];
-	int k;
-	int len;   
-   	len = strlen(msg);  
-    	for(i = 0; i < len; i = i + 1){  
-       		pt = m[i];  
-       	 	pt = pt - 96;  
-       	 	k = 1;  
-       	 	for (j = 0; j < key; j++){  
-      	      		k = k * pt;  
-      	      		k = k % n;  
-      	  	}  
-      	  temp[i] = k;  
-      	  ct = k + 96;  
-      	  en[i] = ct;    
-   	 }  
-
-   	 en[i] = -1;  
-   	 printf("THE ENCRYPTED MESSAGE IS: ");  
-  	 for (i = 0; en[i] != -1; i = i + 1){
-  	      print(en[i]);
-	 }    
-}
-
-def decrypt(){
-	int pt; 
-	int ct;
-	int key; 
-	key = d[0];
-	int k;
-	for(i = 0; i < len; i = i + 1){
-		ct = temp[i];  
-        	k = 1;  
-        	for (j = 0; j < key; j++){  
-            		k = k * ct;  
-            		k = k % n;  
-        	}  
-        	pt = k + 96;  
-        	m[i] = pt;    
-	}
-	m[i] = -1;  
-	print "THE DECRYPTED MESSAGE IS: ";  
-    	for (i = 0; m[i] != -1; i++){  
-        	printf(m[i]);  
-	}
+	return;  
 }

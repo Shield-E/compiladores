@@ -76,7 +76,6 @@ class CCLangTokenizer(Tokenizer):
                 continue
 
             if not best_match:
-                print(string[:index])
                 error_hint = self.get_error_info(string, index)
                 raise CompilaLexicalError("Invalid expression.", *error_hint)
 

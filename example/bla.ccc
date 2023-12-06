@@ -1,4 +1,7 @@
 def main() {
     int a;
-    a = 2 + 1;
+    for (a=0;a<0;a=1) {
+        a = a + 1;
+        break;
+    }
 }

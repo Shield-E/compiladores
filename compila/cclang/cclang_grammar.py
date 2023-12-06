@@ -23,7 +23,7 @@ class CCLangGrammar(Grammar):
             Production("FUNCLIST`", ["FUNCDEF", "FUNCLIST`"]),
             Production("FUNCLIST`", [EPSILON]),
 
-            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', "STATELIST", "}"]),
+            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', break_rule_2, "STATELIST", "}"]),
 
             Production("INTFLOATSTR", ["int"]),
             Production("INTFLOATSTR", ["float"]),
@@ -41,7 +41,7 @@ class CCLangGrammar(Grammar):
             Production("STATEMENT", ["RETURNSTAT", ";"]),
             Production("STATEMENT", ["IFSTAT"]),
             Production("STATEMENT", ["FORSTAT"]),
-            Production("STATEMENT", ["{", "STATELIST", "}"]),
+            Production("STATEMENT", ["{", break_rule_5, "STATELIST", "}"]),
             Production("STATEMENT", ["break", ";", break_rule_1]),
             Production("STATEMENT", [";"]),
 
@@ -83,9 +83,9 @@ class CCLangGrammar(Grammar):
 
             Production("FORSTAT", ["for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
 
-            Production("STATELIST", ["STATEMENT", "STATELIST`"]),
+            Production("STATELIST", [break_rule_3, "STATEMENT", "STATELIST`"]),
 
-            Production("STATELIST`", ["STATELIST"]),
+            Production("STATELIST`", [break_rule_4, "STATELIST"]),
             Production("STATELIST`", [EPSILON]),
 
             Production("ALLOCEXPRESSION", ["new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
@@ -237,13 +237,37 @@ def op_tree_14(parser, origin, target):
 
 def break_rule_0(parser, origin, target):
     statement = target[8]
-    statement.is_loop = True
+    statement.in_loop = True
 
 def break_rule_1(parser, origin, target):
     break_stmt = target[0]
-    if not hasattr(origin, "is_loop"):
+    if not hasattr(origin, "in_loop"):
+        origin.in_loop = False
+    
+    if not origin.in_loop:
         error_info = parser.get_error_info(parser.analyzed_input, break_stmt.token)
         raise CompilaSemanticalError(
             "Break statement outside of a loop.",
             *error_info
         )
+
+def break_rule_2(parser, origin, target):
+    statelist = target[6]
+    statelist.in_loop = False
+
+def break_rule_3(parser, origin, target):
+    statement = target[0]
+    statelist = target[1]
+    if hasattr(origin, "in_loop"):
+        statement.in_loop = origin.in_loop
+        statelist.in_loop = origin.in_loop
+
+def break_rule_4(parser, origin, target):
+    statelist = target[0]
+    if hasattr(origin, "in_loop"):
+        statelist.in_loop = origin.in_loop
+
+def break_rule_5(parser, origin, target):
+    statelist = target[1]
+    if hasattr(origin, "in_loop"):
+        statelist.in_loop = origin.in_loop

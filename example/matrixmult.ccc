@@ -1,4 +1,11 @@
+def func(int a) {}
+
 def matrixmult(int matA, int matB) {
+    int i;
+    int j;
+    int k;
+    int a;
+    int b;
     for(i = 0; i < 6; i = i + 1) 
         for(j = 0; j < 6; j = j + 1) {
             int matResult[5][5];

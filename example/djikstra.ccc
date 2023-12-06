@@ -11,7 +11,7 @@ def dijkstra(int graph, int n, int start) {
 
     for (i = 0; i < n; i = i + 1)
         for (j = 0; j < n; j = j + 1)
-            if (Graph[i][j] == 0) {
+            if (graph[i][j] == 0) {
                 cost[i][j] = 99999;
             }
             else {
@@ -34,15 +34,15 @@ def dijkstra(int graph, int n, int start) {
         for (i = 0; i < n; i = i + 1) {
             if (distance[i] < min_distance * (1 - visited[i])) {
                 min_distance = distance[i];
-                nextnode = i;
+                next_node = i;
             }
 
-            visited[nextnode] = 1;
+            visited[next_node] = 1;
             for (i = 0; i < n; i = i + 1) {
                 if (visited[i] == 0) {
-                    if (min_distance + cost[nextnode][i] < distance[i]) {
-                        distance[i] = min_distance + cost[nextnode][i];
-                        pred[i] = nextnode;
+                    if (min_distance + cost[next_node][i] < distance[i]) {
+                        distance[i] = min_distance + cost[next_node][i];
+                        pred[i] = next_node;
                     }
 				}
         	}
@@ -127,5 +127,5 @@ def main(int bla) {
     u = 0;
 
     int this_is_weird;
-    this_is_weird = dijkstra(graph, n, source);
+    this_is_weird = dijkstra(graph, n, u);
 }

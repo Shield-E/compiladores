@@ -7,80 +7,6 @@ from compila.parser.symbol_table import SymbolTable
 from dataclasses import dataclass
 from treelib import Tree
 
-def type_rule_0(parser, origin, target):
-    target[0].symbol_table = SymbolTable()
-
-def type_rule_1(parser, origin, target):
-    target[0].symbol_table = origin.symbol_table
-
-def type_rule_2(parser, origin, target):
-    target[1].symbol_table = SymbolTable(origin.symbol_table)
-
-def type_rule_3(parser, origin, target):
-    _type = target[0]
-    vardecl = target[1]
-    vardecl.type = _type.type
-    vardecl.symbol_table = origin.symbol_table
-
-def type_rule_4(parser, origin, target):
-    origin.type = target[0].token.lexema
-
-def type_rule_5(parser, origin, target):
-    symbol = target[0].token.lexema
-
-    if symbol in origin.symbol_table:
-        _, _row = origin.symbol_table[symbol]
-        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
-        raise CompilaSemanticalError(
-            f'Variable "{symbol}" was already declared in row {_row + 1}.',
-            *error_info
-        )
-
-    row, col = parser.find_row_col(parser.analyzed_input, target[0].token)
-    origin.symbol_table.add_symbol(symbol, origin.type, row)
-
-def type_rule_6(parser, origin, target):
-    target[0].symbol_table = origin.symbol_table
-    target[1].symbol_table = origin.symbol_table
-
-def type_rule_7(parser, origin, target):
-    target[2].symbol_table = origin.symbol_table
-    target[4].symbol_table = origin.symbol_table
-    target[5].symbol_table = origin.symbol_table
-
-def type_rule_8(parser, origin, target):
-    target[2].symbol_table = SymbolTable(origin.symbol_table)
-
-def type_rule_9(parser, origin, target):
-    target[2].symbol_table = origin.symbol_table
-    target[4].symbol_table = origin.symbol_table
-    target[6].symbol_table = origin.symbol_table
-    target[8].symbol_table = origin.symbol_table
-
-def type_rule_10(parser, origin, target):
-    target[6].symbol_table = SymbolTable(origin.symbol_table)
-
-def type_rule_11(parser, origin, target):
-    symbol = target[0].token.lexema
-    if not symbol in origin.symbol_table:
-        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
-        raise CompilaSemanticalError(
-            f'Variable "{symbol}" was used but was not declared.',
-            *error_info
-        )
-
-def type_rule_12(parser, origin, target):
-    target[0].symbol_table = origin.symbol_table
-    target[2].symbol_table = origin.symbol_table
-
-def type_rule_13(parser, origin, target):
-    target[1].symbol_table = origin.symbol_table
-
-def type_rule_14(parser, origin, target):
-    target[1].symbol_table = origin.symbol_table
-    target[2].symbol_table = origin.symbol_table
-
-
 
 class CCLangGrammar(Grammar):
     def __init__(self):
@@ -98,14 +24,14 @@ class CCLangGrammar(Grammar):
             Production("FUNCLIST`", [type_rule_6, "FUNCDEF", "FUNCLIST`"]),
             Production("FUNCLIST`", [EPSILON]),
 
-            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', type_rule_10, break_rule_2, "STATELIST", "}"]),
+            Production("FUNCDEF", ["def", "identifier", type_rule_10, "(", "PARAMLIST", ")", '{', break_rule_2, "STATELIST", "}"]),
 
             Production("INTFLOATSTR", ["int", type_rule_4]),
             Production("INTFLOATSTR", ["float", type_rule_4]),
             Production("INTFLOATSTR", ["str", type_rule_4]),
 
-            Production("PARAMLIST", ["INTFLOATSTR", "identifier", "PARAMLIST`"]),
-            Production("PARAMLIST`", ["," , "PARAMLIST"]),
+            Production("PARAMLIST", ["INTFLOATSTR", "identifier", type_rule_15, "PARAMLIST`"]),
+            Production("PARAMLIST`", [type_rule_6, "," , "PARAMLIST"]),
             Production("PARAMLIST`", [EPSILON]),
             Production("PARAMLIST", [EPSILON]),
 
@@ -139,15 +65,15 @@ class CCLangGrammar(Grammar):
 
             # Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
 
-            Production("PARAMLISTCALL", ["identifier", "PARAMLISTCALL`"]),
+            Production("PARAMLISTCALL", [symbol_table_fowarding, "identifier", type_rule_16, "PARAMLISTCALL`"]),
             Production("PARAMLISTCALL", [EPSILON]),
 
-            Production("PARAMLISTCALL`", ["," , "PARAMLISTCALL"]),
+            Production("PARAMLISTCALL`", [symbol_table_fowarding, "," , "PARAMLISTCALL"]),
             Production("PARAMLISTCALL`", [EPSILON]),
 
-            Production("PRINTSTAT", ["print", "EXPRESSION"]),
+            Production("PRINTSTAT", [type_rule_6, "print", "EXPRESSION"]),
 
-            Production("READSTAT", ["read", "LVALUE"]),
+            Production("READSTAT", [type_rule_6, "read", "LVALUE"]),
 
             Production("RETURNSTAT", ["return"]),
 
@@ -163,12 +89,12 @@ class CCLangGrammar(Grammar):
             Production("STATELIST`", [type_rule_1, break_rule_4, "STATELIST"]),
             Production("STATELIST`", [EPSILON]),
 
-            Production("ALLOCEXPRESSION", ["new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
+            Production("ALLOCEXPRESSION", [symbol_table_fowarding, "new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
 
-            Production("ALLOCEXPRESSION`", ["ALLOCLOOP"]),
+            Production("ALLOCEXPRESSION`", [symbol_table_fowarding, "ALLOCLOOP"]),
             Production("ALLOCEXPRESSION`", [EPSILON]),
 
-            Production("ALLOCLOOP", ["[", "NUMEXPRESSION", "]", "ALLOCLOOP"]),
+            Production("ALLOCLOOP", [symbol_table_fowarding, "[", "NUMEXPRESSION", "]", "ALLOCLOOP"]),
             Production("ALLOCLOOP", [EPSILON]),
 
             Production("RELATIONAL", ["<", op_tree_10]),
@@ -209,16 +135,16 @@ class CCLangGrammar(Grammar):
             Production("FACTOR", ["string_constant", op_tree_0]),
             Production("FACTOR", ["null", op_tree_0]),
             Production("FACTOR", [type_rule_1, "LVALUE", op_tree_12]),
-            Production("FACTOR", ["(", "NUMEXPRESSION", ")", op_tree_13]),
+            Production("FACTOR", [symbol_table_fowarding, "(", "NUMEXPRESSION", ")", op_tree_13]),
 
             Production("LVALUE", ["identifier", type_rule_11, op_tree_14, "LVALUE`"]),
 
-            Production("LVALUE`", ["LVALUELOOP"]),
-            Production("LVALUE`", ["LVALUEFUNCCALL"]), #
+            Production("LVALUE`", [symbol_table_fowarding, "LVALUELOOP"]),
+            Production("LVALUE`", [symbol_table_fowarding, "LVALUEFUNCCALL"]), #
             Production("LVALUE`", [EPSILON]),
 
-            Production("LVALUEFUNCCALL", ["(", "PARAMLISTCALL", ")"]), #
-            Production("LVALUELOOP", ["[", "NUMEXPRESSION", "]", "LVALUELOOP"]),
+            Production("LVALUEFUNCCALL", [symbol_table_fowarding, "(", "PARAMLISTCALL", ")"]), #
+            Production("LVALUELOOP", [symbol_table_fowarding, "[", "NUMEXPRESSION", "]", "LVALUELOOP"]),
             Production("LVALUELOOP", [EPSILON]),
         ]
 
@@ -346,3 +272,123 @@ def break_rule_5(parser, origin, target):
     statelist = target[1]
     if hasattr(origin, "in_loop"):
         statelist.in_loop = origin.in_loop
+
+def symbol_table_fowarding(parser, origin, target):
+    for i in range(len(target)):
+        target[i].symbol_table = origin.symbol_table
+
+def type_rule_0(parser, origin, target):
+    target[0].symbol_table = SymbolTable()
+
+def type_rule_1(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+
+def type_rule_2(parser, origin, target):
+    target[1].symbol_table = SymbolTable(origin.symbol_table)
+
+def type_rule_3(parser, origin, target):
+    _type = target[0]
+    vardecl = target[1]
+    vardecl.type = _type.type
+    vardecl.symbol_table = origin.symbol_table
+
+def type_rule_4(parser, origin, target):
+    origin.type = target[0].token.lexema
+
+def type_rule_5(parser, origin, target):
+    symbol = target[0].token.lexema
+
+    if symbol in origin.symbol_table:
+        _, _row = origin.symbol_table[symbol]
+        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was already declared in row {_row + 1}.',
+            *error_info
+        )
+
+    row, col = parser.find_row_col(parser.analyzed_input, target[0].token)
+    origin.symbol_table.add_symbol(symbol, origin.type, row)
+
+def type_rule_6(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+    target[1].symbol_table = origin.symbol_table
+
+def type_rule_7(parser, origin, target):
+    target[2].symbol_table = origin.symbol_table
+    target[4].symbol_table = origin.symbol_table
+    target[5].symbol_table = origin.symbol_table
+
+def type_rule_8(parser, origin, target):
+    target[1].symbol_table = SymbolTable(origin.symbol_table)
+
+def type_rule_9(parser, origin, target):
+    target[2].symbol_table = origin.symbol_table
+    target[4].symbol_table = origin.symbol_table
+    target[6].symbol_table = origin.symbol_table
+    target[8].symbol_table = origin.symbol_table
+
+def type_rule_10(parser, origin, target):
+    new_table = SymbolTable(origin.symbol_table)
+    target[3].symbol_table = new_table
+    target[6].symbol_table = new_table
+
+    symbol = target[1].token.lexema
+    if symbol in origin.symbol_table:
+        _, _row = origin.symbol_table[symbol]
+        error_info = parser.get_error_info(parser.analyzed_input, target[1].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was already declared in row {_row + 1}.',
+            *error_info
+        )
+
+    row, col = parser.find_row_col(parser.analyzed_input, target[1].token)
+    origin.symbol_table.add_symbol(symbol, "function", row)
+
+
+def type_rule_11(parser, origin, target):
+    symbol = target[0].token.lexema
+    target[1].symbol_table = origin.symbol_table
+    if not symbol in origin.symbol_table:
+        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was used but was not declared.',
+            *error_info
+        )
+
+def type_rule_12(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+    target[2].symbol_table = origin.symbol_table
+
+def type_rule_13(parser, origin, target):
+    target[1].symbol_table = origin.symbol_table
+
+def type_rule_14(parser, origin, target):
+    target[1].symbol_table = origin.symbol_table
+    target[2].symbol_table = origin.symbol_table
+
+def type_rule_15(parser, origin, target):
+    _type = target[0]
+    symbol = target[1].token.lexema
+    paramlist = target[2]
+
+    paramlist.symbol_table = origin.symbol_table
+
+    if symbol in origin.symbol_table:
+        _, _row = origin.symbol_table[symbol]
+        error_info = parser.get_error_info(parser.analyzed_input, target[1].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was already declared in row {_row + 1}.',
+            *error_info
+        )
+
+    row, col = parser.find_row_col(parser.analyzed_input, target[1].token)
+    origin.symbol_table.add_symbol(symbol, _type.type, row)
+
+def type_rule_16(parser, origin, target):
+    symbol = target[0].token.lexema
+    if not symbol in origin.symbol_table:
+        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was used but was not declared.',
+            *error_info
+        )

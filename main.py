@@ -27,6 +27,9 @@ def analyze_file(path):
     except CompilaError as error:
         print(f'Error on file "{path}".')
         print(error)
+    except Exception as error:
+        print(f'Semantical error on file "{path}".')
+        print(error)
     else:
         for i, tree in enumerate(parser.expression_trees):
             print(f"INORDER FOR EXPRESSION {i}:")

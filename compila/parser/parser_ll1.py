@@ -160,7 +160,7 @@ class ParserLL1:
             # +1 to compensate the newline char
             chars += len(line) + 1
 
-        col = (token.index - chars - len(token.lexema))
+        col = (token.index - chars + 1)
 
         spaces = " " * col
         markers = "^" * len(token.lexema)

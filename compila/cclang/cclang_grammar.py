@@ -281,13 +281,17 @@ def symbol_table_fowarding(parser, origin, target):
         target[i].symbol_table = origin.symbol_table
 
 def type_rule_0(parser, origin, target):
-    target[0].symbol_table = SymbolTable()
+    new_table = SymbolTable()
+    target[0].symbol_table = new_table
+    parser.symbol_tables.append(new_table)
 
 def type_rule_1(parser, origin, target):
     target[0].symbol_table = origin.symbol_table
 
 def type_rule_2(parser, origin, target):
-    target[1].symbol_table = SymbolTable(origin.symbol_table)
+    new_table = SymbolTable(origin.symbol_table)
+    target[1].symbol_table = new_table
+    parser.symbol_tables.append(new_table)
 
 def type_rule_3(parser, origin, target):
     _type = target[0]
@@ -322,7 +326,9 @@ def type_rule_7(parser, origin, target):
     target[5].symbol_table = origin.symbol_table
 
 def type_rule_8(parser, origin, target):
-    target[1].symbol_table = SymbolTable(origin.symbol_table)
+    new_table = SymbolTable(origin.symbol_table)
+    target[1].symbol_table = new_table
+    parser.symbol_tables.append(new_table)
 
 def type_rule_9(parser, origin, target):
     target[2].symbol_table = origin.symbol_table
@@ -334,6 +340,7 @@ def type_rule_10(parser, origin, target):
     new_table = SymbolTable(origin.symbol_table)
     target[3].symbol_table = new_table
     target[6].symbol_table = new_table
+    parser.symbol_tables.append(new_table)
 
     symbol = target[1].token.lexema
     row, col = parser.find_row_col(parser.analyzed_input, target[1].token)

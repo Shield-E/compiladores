@@ -35,9 +35,17 @@ def analyze_file(path):
             print(f"INORDER FOR EXPRESSION {i}:")
             tree.print_inorder()
             print("\n")
+
+        for i, st in enumerate(parser.symbol_tables):
+            print(f"SYMBOL TABLE {i}:")
+            print(st)
+            print("")
+
+        print("Every arithmetic expression is valid.")
         print("Every variable declaration is valid in its scope.")
         print("Every break is inside a for loop.")
-        print("Everything right!")
+        print()
+        print("Everything is right!")
 
 
 def main():

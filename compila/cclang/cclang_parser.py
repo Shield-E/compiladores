@@ -12,3 +12,4 @@ class CCLangParser(ParserLL1):
         grammar = CCLangGrammar()
         super().__init__(tokenizer, grammar)
         self.expression_trees = []
+        self.symbol_tables = []

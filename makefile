@@ -1,13 +1,8 @@
+FILE?=example/djikstra.ccc
+
 run:
-	poetry run python3 main.py
+	python3 main.py -p $(FILE) | tee output.txt
 
 install:
-	pip install poetry
-	poetry install
-
-format:
-	poetry run black .
-	poetry run isort .
-
-test:
-	poetry run pytest
+	pip install treelib
+	pip install tabulate

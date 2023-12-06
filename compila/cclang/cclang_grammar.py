@@ -35,12 +35,12 @@ class CCLangGrammar(Grammar):
             Production("PARAMLIST`", [EPSILON]),
             Production("PARAMLIST", [EPSILON]),
 
-            Production("STATEMENT", [type_rule_1, "VARDECL", ";"]),
-            Production("STATEMENT", [type_rule_1, "ATRIBSTAT", ";"]),
-            Production("STATEMENT", [type_rule_1, "PRINTSTAT", ";"]),
-            Production("STATEMENT", [type_rule_1, "READSTAT", ";"]),
-            Production("STATEMENT", [type_rule_1, "RETURNSTAT", ";"]),
-            Production("STATEMENT", [type_rule_1, "IFSTAT"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "VARDECL", ";"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "ATRIBSTAT", ";"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "PRINTSTAT", ";"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "READSTAT", ";"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "RETURNSTAT", ";"]),
+            Production("STATEMENT", [break_rule_4, type_rule_1, "IFSTAT"]),
             Production("STATEMENT", [type_rule_1, "FORSTAT"]),
             Production("STATEMENT", [type_rule_2, "{", break_rule_5, "STATELIST", "}"]),
             Production("STATEMENT", ["break", ";", break_rule_1]),
@@ -77,14 +77,14 @@ class CCLangGrammar(Grammar):
 
             Production("RETURNSTAT", ["return"]),
 
-            Production("IFSTAT", [type_rule_7, "if", "(", "EXPRESSION", ")", "STATEMENT", "IFSTAT`"]),
+            Production("IFSTAT", [type_rule_7, "if", "(", "EXPRESSION", ")", break_rule_6, "STATEMENT", "IFSTAT`"]),
 
             Production("IFSTAT`", [EPSILON]),
             Production("IFSTAT`", ["else", type_rule_8, "STATEMENT"]),
 
             Production("FORSTAT", [type_rule_9, "for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
 
-            Production("STATELIST", [type_rule_6, break_rule_4, "STATEMENT", "STATELIST"]),
+            Production("STATELIST", [type_rule_6, break_rule_3, "STATEMENT", "STATELIST"]),
             Production("STATELIST", [EPSILON]),
 
             Production("ALLOCEXPRESSION", [symbol_table_fowarding, "new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
@@ -255,21 +255,26 @@ def break_rule_2(parser, origin, target):
     statelist.in_loop = False
 
 def break_rule_3(parser, origin, target):
-    statement = target[0]
-    statelist = target[1]
     if hasattr(origin, "in_loop"):
-        statement.in_loop = origin.in_loop
-        statelist.in_loop = origin.in_loop
+        target[0].in_loop = origin.in_loop
+        target[1].in_loop = origin.in_loop
+    else:
+        target[0].in_loop = False
+        target[1].in_loop = False
 
 def break_rule_4(parser, origin, target):
-    statelist = target[0]
-    if hasattr(origin, "in_loop"):
-        statelist.in_loop = origin.in_loop
+    target[0].in_loop = origin.in_loop
 
 def break_rule_5(parser, origin, target):
     statelist = target[1]
     if hasattr(origin, "in_loop"):
         statelist.in_loop = origin.in_loop
+
+def break_rule_6(parser, origin, target):
+    if hasattr(origin, "in_loop"):
+        target[4].in_loop = origin.in_loop
+        target[5].in_loop = origin.in_loop
+        
 
 def symbol_table_fowarding(parser, origin, target):
     for i in range(len(target)):

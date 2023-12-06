@@ -331,14 +331,6 @@ def type_rule_10(parser, origin, target):
     target[6].symbol_table = new_table
 
     symbol = target[1].token.lexema
-    if symbol in origin.symbol_table:
-        _, _row = origin.symbol_table[symbol]
-        error_info = parser.get_error_info(parser.analyzed_input, target[1].token)
-        raise CompilaSemanticalError(
-            f'Variable "{symbol}" was already declared in row {_row + 1}.',
-            *error_info
-        )
-
     row, col = parser.find_row_col(parser.analyzed_input, target[1].token)
     origin.symbol_table.add_symbol(symbol, "function", row)
 

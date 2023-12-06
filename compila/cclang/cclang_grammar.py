@@ -2,9 +2,84 @@ from compila.constants import EPSILON
 from compila.parser.grammar import Grammar
 from compila.parser.production import Production
 from compila.error import CompilaSemanticalError
+from compila.parser.symbol_table import SymbolTable
 
 from dataclasses import dataclass
 from treelib import Tree
+
+def type_rule_0(parser, origin, target):
+    target[0].symbol_table = SymbolTable()
+
+def type_rule_1(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+
+def type_rule_2(parser, origin, target):
+    target[1].symbol_table = SymbolTable(origin.symbol_table)
+
+def type_rule_3(parser, origin, target):
+    _type = target[0]
+    vardecl = target[1]
+    vardecl.type = _type.type
+    vardecl.symbol_table = origin.symbol_table
+
+def type_rule_4(parser, origin, target):
+    origin.type = target[0].token.lexema
+
+def type_rule_5(parser, origin, target):
+    symbol = target[0].token.lexema
+
+    if symbol in origin.symbol_table:
+        _, _row = origin.symbol_table[symbol]
+        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was already declared in row {_row + 1}.',
+            *error_info
+        )
+
+    row, col = parser.find_row_col(parser.analyzed_input, target[0].token)
+    origin.symbol_table.add_symbol(symbol, origin.type, row)
+
+def type_rule_6(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+    target[1].symbol_table = origin.symbol_table
+
+def type_rule_7(parser, origin, target):
+    target[2].symbol_table = origin.symbol_table
+    target[4].symbol_table = origin.symbol_table
+    target[5].symbol_table = origin.symbol_table
+
+def type_rule_8(parser, origin, target):
+    target[2].symbol_table = SymbolTable(origin.symbol_table)
+
+def type_rule_9(parser, origin, target):
+    target[2].symbol_table = origin.symbol_table
+    target[4].symbol_table = origin.symbol_table
+    target[6].symbol_table = origin.symbol_table
+    target[8].symbol_table = origin.symbol_table
+
+def type_rule_10(parser, origin, target):
+    target[6].symbol_table = SymbolTable(origin.symbol_table)
+
+def type_rule_11(parser, origin, target):
+    symbol = target[0].token.lexema
+    if not symbol in origin.symbol_table:
+        error_info = parser.get_error_info(parser.analyzed_input, target[0].token)
+        raise CompilaSemanticalError(
+            f'Variable "{symbol}" was used but was not declared.',
+            *error_info
+        )
+
+def type_rule_12(parser, origin, target):
+    target[0].symbol_table = origin.symbol_table
+    target[2].symbol_table = origin.symbol_table
+
+def type_rule_13(parser, origin, target):
+    target[1].symbol_table = origin.symbol_table
+
+def type_rule_14(parser, origin, target):
+    target[1].symbol_table = origin.symbol_table
+    target[2].symbol_table = origin.symbol_table
+
 
 
 class CCLangGrammar(Grammar):
@@ -14,40 +89,40 @@ class CCLangGrammar(Grammar):
 
     def create_productions(self):
         productions = [
-            Production("PROGRAM", ["STATEMENT"]),
-            Production("PROGRAM", ["FUNCLIST"]),
+            Production("PROGRAM", [type_rule_0, "STATEMENT"]),
+            Production("PROGRAM", [type_rule_0, "FUNCLIST"]),
             Production("PROGRAM", [EPSILON]),
 
-            Production("FUNCLIST", ["FUNCDEF","FUNCLIST`"]),
+            Production("FUNCLIST", [type_rule_6, "FUNCDEF","FUNCLIST`"]),
 
-            Production("FUNCLIST`", ["FUNCDEF", "FUNCLIST`"]),
+            Production("FUNCLIST`", [type_rule_6, "FUNCDEF", "FUNCLIST`"]),
             Production("FUNCLIST`", [EPSILON]),
 
-            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', break_rule_2, "STATELIST", "}"]),
+            Production("FUNCDEF", ["def", "identifier", "(", "PARAMLIST", ")", '{', type_rule_10, break_rule_2, "STATELIST", "}"]),
 
-            Production("INTFLOATSTR", ["int"]),
-            Production("INTFLOATSTR", ["float"]),
-            Production("INTFLOATSTR", ["str"]),
+            Production("INTFLOATSTR", ["int", type_rule_4]),
+            Production("INTFLOATSTR", ["float", type_rule_4]),
+            Production("INTFLOATSTR", ["str", type_rule_4]),
 
             Production("PARAMLIST", ["INTFLOATSTR", "identifier", "PARAMLIST`"]),
             Production("PARAMLIST`", ["," , "PARAMLIST"]),
             Production("PARAMLIST`", [EPSILON]),
             Production("PARAMLIST", [EPSILON]),
 
-            Production("STATEMENT", ["VARDECL", ";"]),
-            Production("STATEMENT", ["ATRIBSTAT", ";"]),
-            Production("STATEMENT", ["PRINTSTAT", ";"]),
-            Production("STATEMENT", ["READSTAT", ";"]),
-            Production("STATEMENT", ["RETURNSTAT", ";"]),
-            Production("STATEMENT", ["IFSTAT"]),
-            Production("STATEMENT", ["FORSTAT"]),
-            Production("STATEMENT", ["{", break_rule_5, "STATELIST", "}"]),
+            Production("STATEMENT", [type_rule_1, "VARDECL", ";"]),
+            Production("STATEMENT", [type_rule_1, "ATRIBSTAT", ";"]),
+            Production("STATEMENT", [type_rule_1, "PRINTSTAT", ";"]),
+            Production("STATEMENT", [type_rule_1, "READSTAT", ";"]),
+            Production("STATEMENT", [type_rule_1, "RETURNSTAT", ";"]),
+            Production("STATEMENT", [type_rule_1, "IFSTAT"]),
+            Production("STATEMENT", [type_rule_1, "FORSTAT"]),
+            Production("STATEMENT", [type_rule_2, "{", break_rule_5, "STATELIST", "}"]),
             Production("STATEMENT", ["break", ";", break_rule_1]),
             Production("STATEMENT", [";"]),
 
-            Production("VARDECL", ["INTFLOATSTR", "VARDECL`"]),
+            Production("VARDECL", ["INTFLOATSTR", type_rule_3, "VARDECL`"]),
 
-            Production("VARDECL`", ["identifier", "VARDECL``"]),
+            Production("VARDECL`", ["identifier", type_rule_5, "VARDECL``"]),
             Production("VARDECL``", ["INTCONSTANTLOOP"]),
             Production("VARDECL``", [EPSILON]),
 
@@ -56,10 +131,10 @@ class CCLangGrammar(Grammar):
             Production("INTCONSTANTLOOP`", ["INTCONSTANTLOOP"]),
             Production("INTCONSTANTLOOP`", [EPSILON]),
 
-            Production("ATRIBSTAT", ["LVALUE", "=", "ATRIBSTAT`"]),
+            Production("ATRIBSTAT", [type_rule_12, "LVALUE", "=", "ATRIBSTAT`"]),
 
-            Production("ATRIBSTAT`", ["EXPRESSION"]),
-            Production("ATRIBSTAT`", ["ALLOCEXPRESSION"]),
+            Production("ATRIBSTAT`", [type_rule_1, "EXPRESSION"]),
+            Production("ATRIBSTAT`", [type_rule_1, "ALLOCEXPRESSION"]),
             # Production("ATRIBSTAT`", ["#", "FUNCCALL"]),
 
             # Production("FUNCCALL", ["identifier", "(", "PARAMLISTCALL", ")"]),
@@ -76,16 +151,16 @@ class CCLangGrammar(Grammar):
 
             Production("RETURNSTAT", ["return"]),
 
-            Production("IFSTAT", ["if", "(", "EXPRESSION", ")", "STATEMENT", "IFSTAT`"]),
+            Production("IFSTAT", [type_rule_7, "if", "(", "EXPRESSION", ")", "STATEMENT", "IFSTAT`"]),
 
             Production("IFSTAT`", [EPSILON]),
-            Production("IFSTAT`", ["else", "STATEMENT"]),
+            Production("IFSTAT`", ["else", type_rule_8, "STATEMENT"]),
 
-            Production("FORSTAT", ["for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
+            Production("FORSTAT", [type_rule_9, "for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
 
-            Production("STATELIST", [break_rule_3, "STATEMENT", "STATELIST`"]),
+            Production("STATELIST", [type_rule_6, break_rule_3, "STATEMENT", "STATELIST`"]),
 
-            Production("STATELIST`", [break_rule_4, "STATELIST"]),
+            Production("STATELIST`", [type_rule_1, break_rule_4, "STATELIST"]),
             Production("STATELIST`", [EPSILON]),
 
             Production("ALLOCEXPRESSION", ["new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
@@ -103,40 +178,40 @@ class CCLangGrammar(Grammar):
             Production("RELATIONAL", ["==", op_tree_10]),
             Production("RELATIONAL", ["!=", op_tree_10]),
 
-            Production("EXPRESSION", ["NUMEXPRESSION", op_tree_7, "EXPRESSION`", op_tree_11]),
+            Production("EXPRESSION", [type_rule_6, "NUMEXPRESSION", op_tree_7, "EXPRESSION`", op_tree_11]),
 
-            Production("EXPRESSION`", ["RELATIONAL", "NUMEXPRESSION", op_tree_9]),
+            Production("EXPRESSION`", [type_rule_6, "RELATIONAL", "NUMEXPRESSION", op_tree_9]),
             Production("EXPRESSION`", [EPSILON, op_tree_6]),
 
-            Production("NUMEXPRESSION", ["TERM", op_tree_7, "NUMEXPRESSIONLOOP", op_tree_8]),
+            Production("NUMEXPRESSION", [type_rule_6, "TERM", op_tree_7, "NUMEXPRESSIONLOOP", op_tree_8]),
             Production("NUMEXPRESSION", [EPSILON, op_tree_6]),
 
-            Production("NUMEXPRESSIONLOOP", ["+", "TERM", op_tree_4, "NUMEXPRESSIONLOOP", op_tree_5]),
-            Production("NUMEXPRESSIONLOOP", ["-", "TERM", op_tree_4, "NUMEXPRESSIONLOOP", op_tree_5]),
+            Production("NUMEXPRESSIONLOOP", [type_rule_14, "+", "TERM", op_tree_4, "NUMEXPRESSIONLOOP", op_tree_5]),
+            Production("NUMEXPRESSIONLOOP", [type_rule_14, "-", "TERM", op_tree_4, "NUMEXPRESSIONLOOP", op_tree_5]),
             Production("NUMEXPRESSIONLOOP", [EPSILON, op_tree_6]),
 
-            Production("TERM", ["UNARYEXPR", op_tree_7, "TERMLOOP", op_tree_8]),
+            Production("TERM", [type_rule_6, "UNARYEXPR", op_tree_7, "TERMLOOP", op_tree_8]),
 
             # Production("TERM`", ["TERMLOOP"]),
             # Production("TERM`", [EPSILON]),
 
-            Production("TERMLOOP", ["*", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
-            Production("TERMLOOP", ["/", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
-            Production("TERMLOOP", ["%", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
+            Production("TERMLOOP", [type_rule_14, "*", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
+            Production("TERMLOOP", [type_rule_14, "/", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
+            Production("TERMLOOP", [type_rule_14, "%", "UNARYEXPR", op_tree_4, "TERMLOOP", op_tree_5]),
             Production("TERMLOOP", [EPSILON, op_tree_6]),
 
-            Production("UNARYEXPR", ["+", "FACTOR", op_tree_3]),
-            Production("UNARYEXPR", ["-", "FACTOR", op_tree_3]),
-            Production("UNARYEXPR", ["FACTOR", op_tree_1]),
+            Production("UNARYEXPR", [type_rule_13, "+", "FACTOR", op_tree_3]),
+            Production("UNARYEXPR", [type_rule_13, "-", "FACTOR", op_tree_3]),
+            Production("UNARYEXPR", [type_rule_1, "FACTOR", op_tree_1]),
 
             Production("FACTOR", ["int_constant", op_tree_0]),
             Production("FACTOR", ["float_constant", op_tree_0]),
             Production("FACTOR", ["string_constant", op_tree_0]),
             Production("FACTOR", ["null", op_tree_0]),
-            Production("FACTOR", ["LVALUE", op_tree_12]),
+            Production("FACTOR", [type_rule_1, "LVALUE", op_tree_12]),
             Production("FACTOR", ["(", "NUMEXPRESSION", ")", op_tree_13]),
 
-            Production("LVALUE", ["identifier", op_tree_14, "LVALUE`"]),
+            Production("LVALUE", ["identifier", type_rule_11, op_tree_14, "LVALUE`"]),
 
             Production("LVALUE`", ["LVALUELOOP"]),
             Production("LVALUE`", ["LVALUEFUNCCALL"]), #

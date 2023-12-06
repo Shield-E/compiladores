@@ -169,3 +169,14 @@ class ParserLL1:
             RED_COLOR + line,
             spaces + markers + DISABLE_COLOR
         )
+
+    def find_row_col(self, string:str, token:Token):
+        chars = 0
+        for row, line in enumerate(string.splitlines()):
+            if 0 <= token.index < chars + len(line):
+                break
+            # +1 to compensate the newline char
+            chars += len(line) + 1
+
+        col = (token.index - chars - len(token.lexema))
+        return row, col

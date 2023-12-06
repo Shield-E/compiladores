@@ -31,8 +31,7 @@ def analyze_file(path):
         for i, tree in enumerate(parser.expression_trees):
             print(f"INORDER FOR EXPRESSION {i}:")
             tree.print_inorder()
-            print()
-            print()
+            print("\n")
         print("Every variable declaration is valid in its scope.")
         print("Every break is inside a for loop.")
         print("Everything right!")

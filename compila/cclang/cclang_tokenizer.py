@@ -15,6 +15,7 @@ class CCLangTokenizer(Tokenizer):
         "-"                 :r"-",
         "*"                 :r"\*",
         "/"                 :r"/",
+        "%"                 :r"%",
         "="                 :r"=",
         "=="                :r"==",
         "!="                :r"!=",

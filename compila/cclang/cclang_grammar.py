@@ -84,10 +84,8 @@ class CCLangGrammar(Grammar):
 
             Production("FORSTAT", [type_rule_9, "for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
 
-            Production("STATELIST", [type_rule_6, break_rule_3, "STATEMENT", "STATELIST`"]),
-
-            Production("STATELIST`", [type_rule_1, break_rule_4, "STATELIST"]),
-            Production("STATELIST`", [EPSILON]),
+            Production("STATELIST", [type_rule_6, break_rule_4, "STATEMENT", "STATELIST"]),
+            Production("STATELIST", [EPSILON]),
 
             Production("ALLOCEXPRESSION", [symbol_table_fowarding, "new", "INTFLOATSTR", "ALLOCEXPRESSION`"]),
 

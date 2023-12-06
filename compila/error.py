@@ -11,3 +11,7 @@ class CompilaLexicalError(CompilaError):
 
 class CompilaSyntacticalError(CompilaError):
     pass
+
+
+class CompilaSemanticalError(CompilaError):
+    pass

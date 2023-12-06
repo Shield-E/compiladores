@@ -47,6 +47,7 @@ class CCLangTokenizer(Tokenizer):
         "return",
         "new",
         "null",
+        "break",
     ]
 
     def run(self, string: str) -> Generator[Token]:

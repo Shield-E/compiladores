@@ -32,6 +32,7 @@ def analyze_file(path):
             print(f"INORDER FOR EXPRESSION {i}:")
             tree.print_inorder()
             print()
+            print()
 
         print("Everything right!")
 

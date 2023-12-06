@@ -40,6 +40,7 @@ class ParserLL1:
     def __init__(self, tokenizer: Tokenizer, grammar: Grammar):
         self.stacktrace = list()
         self.semantic_on = True
+        self.analyzed_input = ""
         self.set_tokenizer(tokenizer)
         self.set_grammar(grammar)
 
@@ -51,6 +52,8 @@ class ParserLL1:
         self.create_table()
 
     def analyze(self, string):
+        self.analyzed_input = string
+
         index = 0
         stack = []
         self.stacktrace.clear()

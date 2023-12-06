@@ -1,6 +1,7 @@
 from compila.constants import EPSILON
 from compila.parser.grammar import Grammar
 from compila.parser.production import Production
+from compila.error import CompilaSemanticalError
 
 from dataclasses import dataclass
 from treelib import Tree
@@ -41,7 +42,7 @@ class CCLangGrammar(Grammar):
             Production("STATEMENT", ["IFSTAT"]),
             Production("STATEMENT", ["FORSTAT"]),
             Production("STATEMENT", ["{", "STATELIST", "}"]),
-            Production("STATEMENT", ["break", ";"]),
+            Production("STATEMENT", ["break", ";", break_rule_1]),
             Production("STATEMENT", [";"]),
 
             Production("VARDECL", ["INTFLOATSTR", "VARDECL`"]),
@@ -80,7 +81,7 @@ class CCLangGrammar(Grammar):
             Production("IFSTAT`", [EPSILON]),
             Production("IFSTAT`", ["else", "STATEMENT"]),
 
-            Production("FORSTAT", ["for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", "STATEMENT"]),
+            Production("FORSTAT", ["for", "(", "ATRIBSTAT", ";", "EXPRESSION", ";", "ATRIBSTAT", ")", break_rule_0, "STATEMENT"]),
 
             Production("STATELIST", ["STATEMENT", "STATELIST`"]),
 
@@ -233,3 +234,16 @@ def op_tree_14(parser, origin, target):
     name = identifier.token.lexema
     lvalue_dash.her_expr_tree = ExprTree(name, [])
     origin.syn_expr_tree = lvalue_dash.her_expr_tree
+
+def break_rule_0(parser, origin, target):
+    statement = target[8]
+    statement.is_loop = True
+
+def break_rule_1(parser, origin, target):
+    break_stmt = target[0]
+    if not hasattr(origin, "is_loop"):
+        error_info = parser.get_error_info(parser.analyzed_input, break_stmt.token)
+        raise CompilaSemanticalError(
+            "Break statement outside of a loop.",
+            *error_info
+        )

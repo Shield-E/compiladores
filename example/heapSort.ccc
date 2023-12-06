@@ -1,0 +1,62 @@
+def swap(a, b){
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+
+def heapify(arr, n, i){
+	int largest;
+	largest = i;
+
+	int left;
+	left = 2 * i + 1;
+	
+	int right;
+	right = 2 * i + 2;
+
+	if (left < N){
+		if(arr[left] > arr[largest]){
+			largest = left;
+		}
+	}
+	
+	if (right < N){
+		if(arr[right] > arr[largest]){
+			largest = right;
+		}
+	}
+ 
+        if (largest != i) {
+ 
+        swap(arr[i], arr[largest]);
+
+        heapify(arr, n, largest);
+    }
+}
+
+def heapSort(arr, n){
+	for (int i = n / 2 - 1; i >= 0; i = i - 1){
+		heapify(arr, n, i);
+	}
+ 
+	for (int i = n - 1; i >= 0; i = i - 1) {
+        	swap(arr[0], arr[i]);
+		heapify(arr, i, 0);
+ 	}
+}
+
+def main(){
+	int arr[5] = new int[5];
+	arr[0] = 12;
+	arr[1] = 11;
+	arr[2] = 13;
+	arr[3] = 5;
+	arr[4] = 6;
+	arr[5] = 7;
+
+	int n;
+	n = 6
+
+	heapSort(arr, n);
+}

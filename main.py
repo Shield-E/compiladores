@@ -33,7 +33,8 @@ def analyze_file(path):
             tree.print_inorder()
             print()
             print()
-
+        print("Every variable declaration is valid in its scope.")
+        print("Every break is inside a for loop.")
         print("Everything right!")
 
 

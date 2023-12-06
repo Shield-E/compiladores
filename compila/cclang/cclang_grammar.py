@@ -28,7 +28,7 @@ class CCLangGrammar(Grammar):
 
             Production("INTFLOATSTR", ["int", type_rule_4]),
             Production("INTFLOATSTR", ["float", type_rule_4]),
-            Production("INTFLOATSTR", ["str", type_rule_4]),
+            Production("INTFLOATSTR", ["string", type_rule_4]),
 
             Production("PARAMLIST", ["INTFLOATSTR", "identifier", type_rule_15, "PARAMLIST`"]),
             Production("PARAMLIST`", [type_rule_6, "," , "PARAMLIST"]),

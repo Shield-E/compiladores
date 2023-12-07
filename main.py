@@ -7,7 +7,7 @@ from pathlib import Path
 
 parser = CCLangParser()
 
-
+# GRUPO A: ENZO GOMES SONEGO e ANDRE FILIPE DA SILVA FERNANDES
 def analyze_file(path):
     try:
         path = Path(path)

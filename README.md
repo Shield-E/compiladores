@@ -10,7 +10,7 @@ As únicas dependências do projeto são as bibliotecas treelib e tabulate que f
 
 ## Utilização
 
-Para executar o software para testar analisar um arquivo use o comando:
+Para executar o software para testar analisar um arquivo use o comando, FILE representa o arquivo a ser compilado:
 
     make run FILE=example/djikstra.ccc
 

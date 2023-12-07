@@ -1,7 +1,7 @@
 FILE?=example/djikstra.ccc
 
 run:
-	python3 main.py -p $(FILE)
+	python3.10 main.py -p $(FILE)
 
 install:
 	pip install treelib
